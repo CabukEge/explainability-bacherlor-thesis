@@ -9,9 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
-
-import explainability_toolkit as et
-
+import explainability_toolkit as ex
 # Installiere das `graphviz` Paket
 try:
     from graphviz import Digraph
@@ -22,6 +20,11 @@ except ImportError:
 
 plt.switch_backend('agg')
 
+ex.generate_disjoint_datasets(ex.)
+
+# Daten und Labels zusammenfügen
+X = np.array(images_class0 + images_class1)
+y = np.array(labels_class0 + labels_class1)
 
 
 # Fully Connected Network
