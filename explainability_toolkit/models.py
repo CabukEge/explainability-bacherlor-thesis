@@ -1,14 +1,14 @@
-from sklearn.metrics import accuracy_score
-from sklearn.tree import DecisionTreeClassifier
 import torch
 import torch.nn as nn
-import torch.optim as optim
 
-import numpy as np
-import matplotlib.pyplot as plt
 
-# Einfaches Netz
+
 class SimpleNet(nn.Module):
+    """
+    Simple fully connected neural network for binary classification.
+    Input: 9 features (3x3 grid)
+    Output: 2 classes
+    """
     def __init__(self):
         super(SimpleNet, self).__init__()
         self.fc1 = nn.Linear(3 * 3, 10)
@@ -20,8 +20,13 @@ class SimpleNet(nn.Module):
         x = self.fc2(x)
         return x
 
-# Convolutional Neural Network
+
 class ImprovedCNN(nn.Module):
+    """
+    Improved CNN architecture with batch normalization and dropout.
+    Input: 1 channel 3x3 grid
+    Output: 2 classes
+    """
     def __init__(self):
         super(ImprovedCNN, self).__init__()
         # First convolutional layer
