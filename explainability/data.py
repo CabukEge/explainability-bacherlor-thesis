@@ -4,6 +4,7 @@ from itertools import product
 from typing import Tuple, Callable
 from boolean_functions import dnf_example
 
+
 def generate_data(func: Callable = dnf_example) -> Tuple[
     Tuple[torch.Tensor, torch.Tensor],
     Tuple[torch.Tensor, torch.Tensor],
