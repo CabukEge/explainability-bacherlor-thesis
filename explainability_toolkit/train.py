@@ -1,26 +1,40 @@
-from sklearn.metrics import accuracy_score
-from sklearn.tree import DecisionTreeClassifier
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import numpy as np
+from sklearn.metrics import accuracy_score
+from sklearn.tree import DecisionTreeClassifier
 from .models import SimpleNet, ImprovedCNN
 
 # Constants
 SEED_LIST = [42, 18215, 14564, 74079, 24555, 60045, 3, 58064034, 25190, 34988]
 ST_NUM_EPOCHS = 500
 
-def decision_tree(X: np.ndarray, y: np.ndarray) -> DecisionTreeClassifier:
-    """
-    Train a decision tree classifier.
-    
-    Args:
-        X: Input features
-        y: Target labels
+def evaluate_consecutive_ones(model, X_test, y_test):
+    """Detailed evaluation of consecutive ones task"""
+    model.eval()
+    with torch.no_grad():
+        predictions = model(X_test).argmax(dim=1)
+        accuracy = (predictions == y_test).float().mean()
         
-    Returns:
-        DecisionTreeClassifier: Trained model
-    """
+        # Find failure cases
+        errors = (predictions != y_test).nonzero().squeeze()
+        if len(errors) > 0:
+            print("\nFailure cases:")
+            for idx in errors:
+                input_vec = X_test[idx].view(-1).numpy()
+                pred = predictions[idx].item()
+                true = y_test[idx].item()
+                has_consecutive = any(all(input_vec[i:i+3] == 1) for i in range(len(input_vec)-2))
+                print(f"Input: {input_vec}")
+                print(f"Has 3 consecutive ones: {has_consecutive}")
+                print(f"Predicted: {pred}, True: {true}\n")
+                
+        return accuracy
+
+def decision_tree(X: np.ndarray, y: np.ndarray) -> DecisionTreeClassifier:
+    """Train a decision tree classifier."""
     clf = DecisionTreeClassifier(random_state=42)
     clf.fit(X, y)
     
@@ -33,32 +47,57 @@ def decision_tree(X: np.ndarray, y: np.ndarray) -> DecisionTreeClassifier:
 def train_fully_connected(X: torch.Tensor, 
                          y: torch.Tensor, 
                          seed_list: list = SEED_LIST, 
-                         num_epochs: int = ST_NUM_EPOCHS) -> tuple:
-    """
-    Train multiple FCN models with different seeds.
-    """
+                         num_epochs: int = ST_NUM_EPOCHS,
+                         learning_rate: float = 0.01) -> tuple:
+    """Train multiple FCN models with different seeds."""
     all_train_losses = []
     final_models = []
     
     for seed in seed_list:
         torch.manual_seed(seed)
+        np.random.seed(seed)
         
         model = SimpleNet()
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.01)
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10, verbose=True)
+        
+        best_loss = float('inf')
+        best_model = None
+        patience = 20
+        patience_counter = 0
         
         train_losses = []
         for epoch in range(num_epochs):
+            model.train()
             optimizer.zero_grad()
             outputs = model(X)
             loss = criterion(outputs, y)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
             
             train_losses.append(loss.item())
+            scheduler.step(loss)
+            
+            if loss < best_loss:
+                best_loss = loss
+                best_model = model.state_dict().copy()
+                patience_counter = 0
+            else:
+                patience_counter += 1
+            
+            if patience_counter >= patience:
+                print(f'Early stopping at epoch {epoch}')
+                break
+                
             if (epoch+1) % 100 == 0:
                 print(f'FCN Seed {seed}: Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
         
+        if best_model is not None:
+            model.load_state_dict(best_model)
+            
+        model.eval()
         with torch.no_grad():
             predicted = model(X).argmax(dim=1)
             accuracy = (predicted == y).float().mean()
@@ -75,9 +114,7 @@ def train_cnn(X_train: torch.Tensor,
               y_val: torch.Tensor = None,
               seed_list: list = SEED_LIST,
               num_epochs: int = ST_NUM_EPOCHS) -> tuple:
-    """
-    Train multiple CNN models with different seeds and improved training process.
-    """
+    """Train multiple CNN models with different seeds."""
     all_train_losses = []
     all_val_losses = []
     final_models = []
@@ -93,9 +130,7 @@ def train_cnn(X_train: torch.Tensor,
         model = ImprovedCNN()
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, mode='min', factor=0.5, patience=20, verbose=True
-        )
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=20, verbose=True)
         
         best_val_loss = float('inf')
         train_losses = []

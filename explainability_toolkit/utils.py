@@ -1,17 +1,16 @@
 import os
+import shutil
 import numpy as np
 import pandas as pd
+import json
+import torch
+import matplotlib.pyplot as plt
+import seaborn as sns
 from datetime import datetime
-import shutil
-from typing import Union, Dict
+from typing import Union, Dict, Any, Optional, List
 
 def archive_old_results(output_dir: str = "results") -> None:
-    """
-    Archive old results into a timestamped folder.
-    
-    Args:
-        output_dir: Directory containing results to archive
-    """
+    """Archive old results into a timestamped folder."""
     if not os.path.exists(output_dir):
         return
         
@@ -41,20 +40,7 @@ def save_predictions(X: np.ndarray,
                     model_name: str,
                     seed: Union[int, None] = None,
                     output_dir: str = "results") -> Dict[str, str]:
-    """
-    Save predictions and evaluation metrics to files.
-    
-    Args:
-        X: Input vectors
-        y_true: True labels
-        y_pred: Predicted labels
-        model_name: Name of the model
-        seed: Random seed used (if applicable)
-        output_dir: Directory to save results
-        
-    Returns:
-        Dict containing paths to saved files
-    """
+    """Save predictions and evaluation metrics to files."""
     os.makedirs(output_dir, exist_ok=True)
     
     results_df = pd.DataFrame({
@@ -102,3 +88,148 @@ def save_predictions(X: np.ndarray,
         'results': filepath,
         'summary': summary_file
     }
+
+class ResultsLogger:
+    """Logger for explanation results with visualizations and metrics."""
+    
+    def __init__(self, output_dir: str = "results"):
+        self.output_dir = output_dir
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.log_dir = os.path.join(output_dir, self.timestamp)
+        os.makedirs(self.log_dir, exist_ok=True)
+        
+    def _find_conjunctive_terms(self, attributions: np.ndarray, threshold: float = 0.1) -> List[List[int]]:
+        """Find groups of variables that should be conjoined based on similar attribution values."""
+        terms = []
+        processed = set()
+        flat_attrs = attributions.flatten()
+        scaled_attrs = flat_attrs / np.max(np.abs(flat_attrs)) if np.max(np.abs(flat_attrs)) > 0 else flat_attrs
+        
+        # Sort indices by attribution value
+        sorted_indices = np.argsort(-np.abs(scaled_attrs))
+        
+        current_term = []
+        current_value = None
+        
+        for idx in sorted_indices:
+            if idx in processed:
+                continue
+                
+            value = scaled_attrs[idx]
+            if abs(value) < threshold:
+                continue
+                
+            if current_value is None:
+                current_term = [idx]
+                current_value = value
+            elif np.isclose(value, current_value, rtol=0.1):  # Similar magnitude and same sign
+                current_term.append(idx)
+            else:
+                if current_term:
+                    terms.append(current_term)
+                current_term = [idx]
+                current_value = value
+                
+            processed.add(idx)
+            
+        if current_term:
+            terms.append(current_term)
+            
+        return terms
+        
+    def _format_boolean_expression(self, attributions: np.ndarray, threshold: float = 0.1) -> str:
+        """Format attribution scores as DNF boolean expression."""
+        # Find groups of variables that should be conjoined
+        terms = self._find_conjunctive_terms(attributions)
+        
+        if not terms:
+            return "False"
+            
+        # Format each conjunctive term
+        dnf_terms = []
+        for term_indices in terms:
+            if not term_indices:
+                continue
+                
+            # Get the variables in this term
+            vars_in_term = [f"x{i+1}" for i in term_indices]
+            
+            # Create the conjunction
+            if len(vars_in_term) == 1:
+                dnf_terms.append(vars_in_term[0])
+            else:
+                dnf_terms.append(f"({' ∧ '.join(vars_in_term)})")
+        
+        # Join terms with OR
+        if not dnf_terms:
+            return "False"
+        elif len(dnf_terms) == 1:
+            return dnf_terms[0]
+        else:
+            return " ∨ ".join(dnf_terms)
+    
+    def log_explanation(self, 
+                       input_data: torch.Tensor,
+                       ground_truth: Dict[str, Any],
+                       predicted: Dict[str, Any],
+                       method_name: str,
+                       case_name: Optional[str] = None):
+        case_id = case_name or datetime.now().strftime("%H%M%S")
+        case_dir = os.path.join(self.log_dir, f"{method_name}_{case_id}")
+        os.makedirs(case_dir, exist_ok=True)
+
+        # Create comparison plot
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+        sns.heatmap(ground_truth['attributions'], ax=ax1, cmap='RdBu', center=0,
+                   annot=True, fmt='.2f')
+        ax1.set_title('Ground Truth Attribution')
+
+        sns.heatmap(predicted['attributions'], ax=ax2, cmap='RdBu', center=0,
+                   annot=True, fmt='.2f')
+        ax2.set_title(f'{method_name} Attribution')
+
+        plt.tight_layout()
+        plt.savefig(os.path.join(case_dir, 'attribution_comparison.png'))
+        plt.close()
+
+        results = {
+            'input': input_data.numpy().tolist(),
+            'ground_truth': {
+                'boolean_expression': self._format_boolean_expression(ground_truth['attributions']),
+                'attributions': ground_truth['attributions'].tolist(),
+                'function_type': ground_truth['function_type']
+            },
+            'predicted': {
+                'boolean_expression': predicted['boolean_expression'],
+                'attributions': predicted['attributions'].tolist(),
+                'local_model_accuracy': predicted.get('local_model_accuracy', None),
+                'prediction': predicted.get('prediction', None)
+            },
+            'metrics': {
+                'correlation': float(np.corrcoef(
+                    ground_truth['attributions'].flatten(),
+                    predicted['attributions'].flatten()
+                )[0, 1]),
+                'mse': float(np.mean((
+                    ground_truth['attributions'] - predicted['attributions']
+                ) ** 2))
+            }
+        }
+
+        with open(os.path.join(case_dir, 'results.json'), 'w') as f:
+            json.dump(results, f, indent=2)
+
+        with open(os.path.join(case_dir, 'summary.txt'), 'w') as f:
+            f.write(f"Explanation Summary for {method_name}\n")
+            f.write(f"{'='*50}\n\n")
+            f.write(f"Input Pattern:\n{input_data.numpy().reshape(3,3)}\n\n")
+            f.write("Ground Truth Expression:\n")
+            f.write(f"{results['ground_truth']['boolean_expression']}\n\n")
+            f.write(f"Predicted Expression:\n")
+            f.write(f"{results['predicted']['boolean_expression']}\n\n")
+            f.write("Metrics:\n")
+            f.write(f"Correlation: {results['metrics']['correlation']:.4f}\n")
+            f.write(f"MSE: {results['metrics']['mse']:.4f}\n")
+            if 'local_model_accuracy' in predicted:
+                f.write(f"Local Model Accuracy: {predicted['local_model_accuracy']:.4f}\n")

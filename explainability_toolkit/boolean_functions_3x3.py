@@ -4,16 +4,6 @@ from typing import Union
 def validate_input(vector: Union[np.ndarray, list]) -> np.ndarray:
     """
     Validates the input vector for boolean functions.
-    
-    Args:
-        vector: Input vector to validate
-        
-    Returns:
-        np.ndarray: Validated numpy array
-        
-    Raises:
-        IndexError: If vector length is not 9
-        ValueError: If vector contains non-binary values
     """
     if not isinstance(vector, np.ndarray):
         vector = np.array(vector)
@@ -29,16 +19,6 @@ def validate_input(vector: Union[np.ndarray, list]) -> np.ndarray:
 def first_example(vector: Union[np.ndarray, list]) -> bool:
     """
     Implementation of the boolean function: (x₁ ∧ x₂) ∨ (x₄ ∧ x₅ ∧ x₆) ∨ (x₇ ∧ x₈ ∧ x₉)
-    
-    Args:
-        vector: Binary input vector of length 9
-        
-    Returns:
-        bool: Result of the boolean function
-        
-    Raises:
-        IndexError: If vector length is not 9
-        ValueError: If vector contains non-binary values
     """
     vector = validate_input(vector)
     
@@ -56,13 +36,6 @@ def first_example(vector: Union[np.ndarray, list]) -> bool:
 def min_x_amount_equals_one(vector: Union[np.ndarray, list], x: int) -> bool:
     """
     Check if at least x elements in the vector are 1.
-    
-    Args:
-        vector: Binary input vector of length 9
-        x: Minimum number of ones required
-        
-    Returns:
-        bool: True if at least x elements are 1, False otherwise
     """
     vector = validate_input(vector)
     return np.sum(vector) >= x
@@ -70,20 +43,47 @@ def min_x_amount_equals_one(vector: Union[np.ndarray, list], x: int) -> bool:
 def x_many_consecutively_one(vector: Union[np.ndarray, list], x: int) -> bool:
     """
     Check if there are x consecutive ones in the vector.
-    
-    Args:
-        vector: Binary input vector of length 9
-        x: Number of consecutive ones required
-        
-    Returns:
-        bool: True if there are x consecutive ones, False otherwise
+    Takes vector as row-major 1D array and checks for consecutive ones in that order.
     """
     vector = validate_input(vector)
     
     if x > len(vector):
         return False
-        
-    for i in range(len(vector) - x + 1):
-        if np.all(vector[i:i+x] == 1):
-            return True
+    
+    # Check for consecutive ones in row-major order
+    count = 0
+    for val in vector:
+        if val == 1:
+            count += 1
+            if count >= x:
+                return True
+        else:
+            count = 0
     return False
+
+def test_x_many_consecutively_one():
+    """
+    Helper function to test consecutive ones detection
+    """
+    test_cases = [
+        # True cases - horizontal consecutive
+        ([1, 1, 1, 0, 0, 0, 0, 0, 0], True),  # First row
+        ([0, 0, 0, 1, 1, 1, 0, 0, 0], True),  # Middle row
+        ([0, 0, 0, 0, 0, 0, 1, 1, 1], True),  # Last row
+        
+        # True cases - vertical consecutive 
+        ([1, 0, 0, 1, 0, 0, 1, 0, 0], True),  # First column
+        ([0, 1, 0, 0, 1, 0, 0, 1, 0], True),  # Middle column
+        ([0, 0, 1, 0, 0, 1, 0, 0, 1], True),  # Last column
+        
+        # False cases
+        ([1, 1, 0, 1, 0, 0, 0, 0, 0], False),  # Only 2 consecutive
+        ([1, 0, 1, 1, 0, 0, 0, 0, 0], False),  # Non-consecutive
+        ([0, 0, 0, 0, 0, 0, 0, 0, 0], False),  # All zeros
+    ]
+    
+    for input_vec, expected in test_cases:
+        result = x_many_consecutively_one(np.array(input_vec), 3)
+        print(f"Input: {input_vec}")
+        print(f"Expected: {expected}, Got: {result}")
+        print(f"Match: {result == expected}\n")

@@ -30,6 +30,12 @@ from .utils import (
     save_predictions,
     vector_to_string
 )
+from .explainers.base_explainer import BaseExplainer
+from .explainers.lime_explainer import LimeExplainer
+from .explainers.visualization_utils import (
+    plot_grid_attribution,
+    plot_multiple_attributions
+)
 
 __all__ = [
     # Boolean functions
@@ -57,7 +63,13 @@ __all__ = [
     # Utilities
     "archive_old_results",
     "save_predictions",
-    "vector_to_string"
+    "vector_to_string",
+    
+    # Explainers
+    "BaseExplainer",
+    "LimeExplainer",
+    "plot_grid_attribution",
+    "plot_multiple_attributions"
 ]
 
 __version__ = "0.1.0"
