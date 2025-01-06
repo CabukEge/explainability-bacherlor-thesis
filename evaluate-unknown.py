@@ -71,30 +71,29 @@ def is_covered_by_terms(term: tuple, known_terms: list, model) -> bool:
                 return True
     return False
 
-def find_terms_with_lime(model, lime_explainer, known_dnf_terms: list) -> list:
-    """Find minimal terms using LIME explanations, guided by known DNF"""
-    terms = set()  # Use a set to avoid duplicates
+def find_terms_with_lime(model, lime_explainer) -> list:
+    """Find minimal terms using LIME explanations"""
+    terms = []
     n_vars = 9
 
-    # Use known DNF terms to guide test case generation
     test_cases = []
-    for term in known_dnf_terms:
-        test_case = np.zeros(n_vars)
-        test_case[list(term)] = 1
-        test_cases.append(test_case)
+    for term_size in range(1, 4):
+        for term in combinations(range(n_vars), term_size):
+            test_case = np.zeros(9)
+            test_case[list(term)] = 1
+            test_cases.append(test_case)
 
     print("\nAnalyzing terms with LIME:")
     for test_case in test_cases:
         explanation = lime_explainer.explain(test_case)
         coefficients = explanation['coefficients']
-        significant_vars = tuple(sorted(i for i, coef in enumerate(coefficients)
-                                        if coef > 0.1 and test_case[i] == 1))
-        if significant_vars and significant_vars not in terms:
-            if verify_term_is_minimal(significant_vars, list(terms), model):
-                print(f"Found minimal term: {significant_vars}")
-                terms.add(significant_vars)  # Add to the set directly
+        significant_vars = tuple(sorted(i for i, coef in enumerate(coefficients) 
+                                         if coef > 0.1 and test_case[i] == 1))
+        if significant_vars and verify_term_is_minimal(significant_vars, terms, model):
+            print(f"Found minimal term: {significant_vars}")
+            terms.append(significant_vars)
 
-    return sorted(terms, key=len)
+    return sorted(set(terms), key=len)
 
 def parse_dnf_to_terms(dnf_str: str) -> list:
     """Convert DNF string to list of terms"""
@@ -114,10 +113,10 @@ def are_dnfs_equivalent(dnf1: str, dnf2: str) -> bool:
     terms2 = parse_dnf_to_terms(dnf2)
     return terms1 == terms2
 
-def reconstruct_dnf_from_model(model, known_dnf_terms: list) -> str:
-    """Reconstruct DNF using LIME explanations, guided by known terms"""
+def reconstruct_dnf_from_model(model) -> str:
+    """Reconstruct DNF using LIME explanations"""
     lime_explainer = LIMEExplainer(model, num_samples=1000)
-    terms = find_terms_with_lime(model, lime_explainer, known_dnf_terms)
+    terms = find_terms_with_lime(model, lime_explainer)
 
     if not terms:
         return "False"
@@ -150,12 +149,10 @@ def evaluate(boolean_func, func_name=""):
 
     train_model(models['FCN'], (X_train, y_train), (X_val, y_val))
 
-    known_dnf_terms = parse_dnf_to_terms(target_dnf)
-    
     correct_predictions = 0
     for name, model in models.items():
         print(f"\nModel: {name}")
-        reconstructed_dnf = reconstruct_dnf_from_model(model, known_dnf_terms)
+        reconstructed_dnf = reconstruct_dnf_from_model(model)
         print(f"Reconstructed DNF: {reconstructed_dnf}")
         if are_dnfs_equivalent(reconstructed_dnf, target_dnf):
             correct_predictions += 1
