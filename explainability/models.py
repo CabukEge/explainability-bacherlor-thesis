@@ -25,6 +25,20 @@ class FCN(nn.Module):
     def forward(self, x):
         return self.net(x.view(-1, 9))
 
+
+class CNN(nn.Module):
+    def __init__(self):
+        super(CNN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=3)  # Single 3x3 filter
+        self.fc1 = nn.Linear(8, 2)  # Fully connected layer (2 outputs: true/false)
+
+    def forward(self, x):
+        x = torch.relu(self.conv1(x))
+        x = x.view(x.size(0), -1)  # Flatten
+        x = self.fc1(x)
+        return x
+
+
 def train_model(model: nn.Module,
                 train_data: Tuple[torch.Tensor, torch.Tensor],
                 val_data: Tuple[torch.Tensor, torch.Tensor],
@@ -32,6 +46,11 @@ def train_model(model: nn.Module,
                 lr: float = 0.01) -> nn.Module:
     X_train, y_train = train_data
     X_val, y_val = val_data
+
+    # Adjust input shape for CNN
+    if isinstance(model, CNN):
+        X_train = X_train.view(-1, 1, 3, 3)
+        X_val = X_val.view(-1, 1, 3, 3)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.CrossEntropyLoss(reduction='mean')

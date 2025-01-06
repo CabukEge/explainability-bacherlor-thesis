@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from data import generate_data
-from models import FCN, train_model, train_tree
+from models import FCN, CNN, train_model, train_tree
 from explainers.lime import LIMEExplainer
 from boolean_functions import dnf_example, dnf_simple, dnf_complex
 from itertools import combinations, product
@@ -26,7 +26,10 @@ def verify_term(term: tuple, model, threshold: float = 0.5) -> bool:
     if isinstance(model, torch.nn.Module):
         model.eval()
         with torch.no_grad():
-            x_tensor = torch.FloatTensor(test_case).reshape(1, 3, 3)
+            if isinstance(model, CNN):
+                x_tensor = torch.FloatTensor(test_case).reshape(1, 1, 3, 3)
+            else:
+                x_tensor = torch.FloatTensor(test_case).reshape(1, 3, 3)
             output = model(x_tensor)
             pred = torch.softmax(output, dim=1)[0, 1].item()
             return pred > threshold
@@ -135,6 +138,11 @@ def get_function_str(func) -> str:
         return "(x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)"
     return "Unknown function"
 
+from models import FCN, CNN, train_model, train_tree
+from data import generate_data
+from explainers.lime import LIMEExplainer
+from boolean_functions import dnf_simple, dnf_example, dnf_complex
+
 def evaluate(boolean_func, func_name=""):
     """Train models and evaluate LIME explanations."""
     print(f"\nTesting function: {func_name}")
@@ -145,10 +153,12 @@ def evaluate(boolean_func, func_name=""):
 
     models = {
         'FCN': FCN(),
-        'Decision Tree': train_tree(X_train, y_train)
+        'Decision Tree': train_tree(X_train, y_train),
+        'CNN': CNN()
     }
 
     train_model(models['FCN'], (X_train, y_train), (X_val, y_val))
+    train_model(models['CNN'], (X_train, y_train), (X_val, y_val))  # Reshaped inside
 
     known_dnf_terms = parse_dnf_to_terms(target_dnf)
     
@@ -164,6 +174,7 @@ def evaluate(boolean_func, func_name=""):
             print("✗ Incorrect reconstruction")
 
     return correct_predictions, len(models)
+
 
 def main():
     """Main function to run the evaluation"""
@@ -187,3 +198,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

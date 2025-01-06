@@ -15,7 +15,8 @@ class LIMEExplainer:
     def _predict(self, x: np.ndarray) -> np.ndarray:
         if self.is_torch:
             with torch.no_grad():
-                x_tensor = torch.FloatTensor(x).reshape(-1, 3, 3)
+                # Ensure input shape matches CNN requirements
+                x_tensor = torch.FloatTensor(x).view(-1, 1, 3, 3)  # Add channel dimension
                 output = self.model(x_tensor)
                 return torch.softmax(output, dim=1)[:, 1].numpy()
         return self.model.predict_proba(x.reshape(-1, 9))[:, 1]
