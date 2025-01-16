@@ -1,0 +1,625 @@
+Testing function: Simple DNF
+Target DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Epoch 0: Val Acc = 0.4286
+Epoch 20: Val Acc = 0.5974
+Epoch 40: Val Acc = 0.6234
+Epoch 60: Val Acc = 0.6883
+Epoch 80: Val Acc = 0.7532
+Epoch 100: Val Acc = 0.7922
+Epoch 120: Val Acc = 0.8701
+Epoch 140: Val Acc = 0.9481
+Epoch 160: Val Acc = 0.9610
+Epoch 180: Val Acc = 0.9870
+Epoch 200: Val Acc = 1.0000
+Epoch 220: Val Acc = 1.0000
+Epoch 240: Val Acc = 1.0000
+Epoch 260: Val Acc = 1.0000
+Epoch 280: Val Acc = 1.0000
+Early stopping at epoch 287
+Epoch 0: Val Acc = 0.5714
+Epoch 20: Val Acc = 0.5584
+Epoch 40: Val Acc = 0.7143
+Epoch 60: Val Acc = 0.8182
+Epoch 80: Val Acc = 0.8442
+Epoch 100: Val Acc = 0.8961
+Epoch 120: Val Acc = 0.9351
+Epoch 140: Val Acc = 0.9610
+Epoch 160: Val Acc = 0.9740
+Epoch 180: Val Acc = 0.9870
+Epoch 200: Val Acc = 0.9870
+Epoch 220: Val Acc = 0.9870
+Epoch 240: Val Acc = 0.9870
+Epoch 260: Val Acc = 1.0000
+Epoch 280: Val Acc = 1.0000
+Epoch 300: Val Acc = 1.0000
+Epoch 320: Val Acc = 1.0000
+Epoch 340: Val Acc = 1.0000
+Early stopping at epoch 354
+
+Model: FCN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Model: Decision Tree
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+
+Analyzing terms with TreeSHAPExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1)
+Found term: (4, 5)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Testing function: Example DNF
+Target DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Epoch 0: Val Acc = 0.5584
+Epoch 20: Val Acc = 0.6753
+Epoch 40: Val Acc = 0.7403
+Epoch 60: Val Acc = 0.7403
+Epoch 80: Val Acc = 0.7532
+Epoch 100: Val Acc = 0.8052
+Epoch 120: Val Acc = 0.8571
+Epoch 140: Val Acc = 0.8831
+Epoch 160: Val Acc = 0.8831
+Epoch 180: Val Acc = 0.9091
+Epoch 200: Val Acc = 0.9221
+Epoch 220: Val Acc = 0.9351
+Epoch 240: Val Acc = 0.9351
+Epoch 260: Val Acc = 0.9481
+Epoch 280: Val Acc = 0.9481
+Epoch 300: Val Acc = 0.9481
+Epoch 320: Val Acc = 0.9610
+Epoch 340: Val Acc = 0.9610
+Epoch 360: Val Acc = 0.9740
+Epoch 380: Val Acc = 0.9870
+Epoch 400: Val Acc = 0.9870
+Epoch 420: Val Acc = 0.9870
+Epoch 440: Val Acc = 0.9870
+Epoch 460: Val Acc = 1.0000
+Epoch 480: Val Acc = 1.0000
+Epoch 500: Val Acc = 1.0000
+Epoch 520: Val Acc = 1.0000
+Epoch 540: Val Acc = 1.0000
+Early stopping at epoch 545
+Epoch 0: Val Acc = 0.3377
+Epoch 20: Val Acc = 0.5195
+Epoch 40: Val Acc = 0.6234
+Epoch 60: Val Acc = 0.6494
+Epoch 80: Val Acc = 0.6883
+Epoch 100: Val Acc = 0.7013
+Epoch 120: Val Acc = 0.7013
+Epoch 140: Val Acc = 0.7403
+Epoch 160: Val Acc = 0.7273
+Epoch 180: Val Acc = 0.7662
+Epoch 200: Val Acc = 0.7792
+Epoch 220: Val Acc = 0.8182
+Epoch 240: Val Acc = 0.8831
+Epoch 260: Val Acc = 0.9091
+Epoch 280: Val Acc = 0.9221
+Epoch 300: Val Acc = 0.9481
+Epoch 320: Val Acc = 0.9481
+Epoch 340: Val Acc = 0.9481
+Epoch 360: Val Acc = 0.9610
+Epoch 380: Val Acc = 0.9481
+Epoch 400: Val Acc = 0.9351
+Epoch 420: Val Acc = 0.9351
+Epoch 440: Val Acc = 0.9351
+Early stopping at epoch 459
+
+Model: FCN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: Decision Tree
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+
+Analyzing terms with TreeSHAPExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1)
+Found term: (3, 4, 5)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Testing function: Complex DNF
+Target DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Epoch 0: Val Acc = 0.5844
+Epoch 20: Val Acc = 0.6623
+Epoch 40: Val Acc = 0.6623
+Epoch 60: Val Acc = 0.6623
+Epoch 80: Val Acc = 0.6753
+Epoch 100: Val Acc = 0.7013
+Epoch 120: Val Acc = 0.7532
+Epoch 140: Val Acc = 0.7792
+Epoch 160: Val Acc = 0.7922
+Epoch 180: Val Acc = 0.8701
+Epoch 200: Val Acc = 0.8961
+Epoch 220: Val Acc = 0.9221
+Epoch 240: Val Acc = 0.9351
+Epoch 260: Val Acc = 0.9610
+Epoch 280: Val Acc = 0.9870
+Epoch 300: Val Acc = 1.0000
+Epoch 320: Val Acc = 1.0000
+Epoch 340: Val Acc = 1.0000
+Epoch 360: Val Acc = 1.0000
+Epoch 380: Val Acc = 1.0000
+Epoch 400: Val Acc = 1.0000
+Early stopping at epoch 400
+Epoch 0: Val Acc = 0.4545
+Epoch 20: Val Acc = 0.7273
+Epoch 40: Val Acc = 0.7013
+Epoch 60: Val Acc = 0.7532
+Epoch 80: Val Acc = 0.7662
+Epoch 100: Val Acc = 0.7792
+Epoch 120: Val Acc = 0.7792
+Epoch 140: Val Acc = 0.7792
+Epoch 160: Val Acc = 0.7532
+Epoch 180: Val Acc = 0.7792
+Epoch 200: Val Acc = 0.7792
+Epoch 220: Val Acc = 0.7922
+Epoch 240: Val Acc = 0.8052
+Epoch 260: Val Acc = 0.8312
+Epoch 280: Val Acc = 0.8571
+Epoch 300: Val Acc = 0.8571
+Epoch 320: Val Acc = 0.8701
+Epoch 340: Val Acc = 0.8831
+Epoch 360: Val Acc = 0.8961
+Epoch 380: Val Acc = 0.9610
+Epoch 400: Val Acc = 0.9740
+Epoch 420: Val Acc = 0.9740
+Epoch 440: Val Acc = 0.9870
+Epoch 460: Val Acc = 1.0000
+Epoch 480: Val Acc = 1.0000
+Epoch 500: Val Acc = 1.0000
+Epoch 520: Val Acc = 1.0000
+Epoch 540: Val Acc = 1.0000
+Early stopping at epoch 543
+
+Model: FCN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: Decision Tree
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+
+Analyzing terms with TreeSHAPExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+
+Analyzing terms with LIMEExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+
+Analyzing terms with KernelSHAPExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+
+Analyzing terms with IntegratedGradientsExplainer:
+Found term: (0, 1, 2)
+Found term: (3, 4)
+Found term: (6, 7, 8)
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Final Results:
+
+Simple DNF:
+FCN-LIME: ✓
+FCN-KernelSHAP: ✓
+FCN-IntegratedGradients: ✓
+Decision Tree-LIME: ✓
+Decision Tree-KernelSHAP: ✓
+Decision Tree-TreeSHAP: ✓
+CNN-LIME: ✓
+CNN-KernelSHAP: ✓
+CNN-IntegratedGradients: ✓
+
+Example DNF:
+FCN-LIME: ✓
+FCN-KernelSHAP: ✓
+FCN-IntegratedGradients: ✓
+Decision Tree-LIME: ✓
+Decision Tree-KernelSHAP: ✓
+Decision Tree-TreeSHAP: ✓
+CNN-LIME: ✓
+CNN-KernelSHAP: ✓
+CNN-IntegratedGradients: ✓
+
+Complex DNF:
+FCN-LIME: ✓
+FCN-KernelSHAP: ✓
+FCN-IntegratedGradients: ✓
+Decision Tree-LIME: ✓
+Decision Tree-KernelSHAP: ✓
+Decision Tree-TreeSHAP: ✓
+CNN-LIME: ✓
+CNN-KernelSHAP: ✓
+CNN-IntegratedGradients: ✓
+
+Overall Statistics:
+Total correct reconstructions: 27/27
+Overall accuracy: 100.0%
+
+Model Training Performance:
+
+Simple DNF:
+FCN:
+  Training time: 0.35s
+  Final validation accuracy: 1.000
+  Convergence epoch: 288
+Decision Tree:
+  Training time: 0.00s
+  Final validation accuracy: 1.000
+  Convergence epoch: 1
+CNN:
+  Training time: 1.26s
+  Final validation accuracy: 1.000
+  Convergence epoch: 355
+
+Example DNF:
+FCN:
+  Training time: 0.60s
+  Final validation accuracy: 1.000
+  Convergence epoch: 546
+Decision Tree:
+  Training time: 0.00s
+  Final validation accuracy: 0.974
+  Convergence epoch: 1
+CNN:
+  Training time: 1.79s
+  Final validation accuracy: 0.948
+  Convergence epoch: 460
+
+Complex DNF:
+FCN:
+  Training time: 0.47s
+  Final validation accuracy: 1.000
+  Convergence epoch: 401
+Decision Tree:
+  Training time: 0.00s
+  Final validation accuracy: 0.948
+  Convergence epoch: 1
+CNN:
+  Training time: 1.90s
+  Final validation accuracy: 1.000
+  Convergence epoch: 544
+
+Explainer Performance:
+
+Simple DNF:
+FCN-LIME:
+  Explanation time: 0.010s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-KernelSHAP:
+  Explanation time: 0.167s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-IntegratedGradients:
+  Explanation time: 0.020s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-LIME:
+  Explanation time: 0.007s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-KernelSHAP:
+  Explanation time: 0.167s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-TreeSHAP:
+  Explanation time: 0.001s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-LIME:
+  Explanation time: 0.015s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-KernelSHAP:
+  Explanation time: 0.461s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-IntegratedGradients:
+  Explanation time: 0.070s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+
+Example DNF:
+FCN-LIME:
+  Explanation time: 0.012s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-KernelSHAP:
+  Explanation time: 0.250s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-IntegratedGradients:
+  Explanation time: 0.030s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-LIME:
+  Explanation time: 0.008s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-KernelSHAP:
+  Explanation time: 0.251s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-TreeSHAP:
+  Explanation time: 0.003s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-LIME:
+  Explanation time: 0.020s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-KernelSHAP:
+  Explanation time: 0.896s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-IntegratedGradients:
+  Explanation time: 0.106s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+
+Complex DNF:
+FCN-LIME:
+  Explanation time: 0.012s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-KernelSHAP:
+  Explanation time: 0.245s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+FCN-IntegratedGradients:
+  Explanation time: 0.030s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-LIME:
+  Explanation time: 0.007s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-KernelSHAP:
+  Explanation time: 0.247s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+Decision Tree-TreeSHAP:
+  Explanation time: 0.003s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-LIME:
+  Explanation time: 0.023s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-KernelSHAP:
+  Explanation time: 0.662s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
+CNN-IntegratedGradients:
+  Explanation time: 0.098s
+  Term precision: 1.000
+  Term recall: 1.000
+  Term F1 score: 1.000
