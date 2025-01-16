@@ -19,6 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+evaluate-unknown.py
 
 # Results and data
 results/*
