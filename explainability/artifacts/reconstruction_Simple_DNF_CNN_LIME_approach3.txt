@@ -1,0 +1,4 @@
+Reconstructed DNF: False
+Found terms: set()
+Accuracy Score: 0.5625
+Processed 512 out of 512 inputs.

@@ -1,0 +1,3186 @@
+=== Approach 1: Selective inputs based on known DNF ===
+Testing function: Simple_DNF
+Target DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+No weight file found at models_weights/FCN.pt. Will train from scratch.
+Training model: FCN
+Saved trained weights to models_weights/FCN.pt
+No weight file found at models_weights/CNN.pt. Will train from scratch.
+Training model: CNN (increased epochs for CNN)
+Saved trained weights to models_weights/CNN.pt
+
+Model: FCN
+
+Explainer: LIME
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: IntegratedGradients
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Model: Decision Tree
+
+Explainer: LIME
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+Found term (0, 1) at sample 1 out of 2
+Found term (4, 5) at sample 2 out of 2
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: KernelSHAP
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: IntegratedGradients
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+=== Approach 1: Selective inputs based on known DNF ===
+Testing function: Example_DNF
+Target DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Explainer: LIME
+Found term (0, 1) at sample 1 out of 3
+Found term (4, 5) at sample 2 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✗ Incorrect reconstruction
+
+Explainer: KernelSHAP
+Found term (0, 1) at sample 1 out of 3
+Found term (4, 5) at sample 2 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✗ Incorrect reconstruction
+
+Explainer: IntegratedGradients
+Found term (0, 1) at sample 1 out of 3
+Found term (4, 5) at sample 2 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+✗ Incorrect reconstruction
+
+Model: Decision Tree
+
+Explainer: LIME
+Found term (0, 1) at sample 1 out of 3
+Found term (3, 4, 5) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+Found term (0, 1) at sample 1 out of 3
+Found term (3, 4, 5) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+Found term (0, 1) at sample 1 out of 3
+Found term (3, 4, 5) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: KernelSHAP
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: IntegratedGradients
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+=== Approach 1: Selective inputs based on known DNF ===
+Testing function: Complex_DNF
+Target DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Explainer: LIME
+Found term (0, 1) at sample 1 out of 3
+Reconstructed DNF: (x_1 ∧ x_2)
+✗ Incorrect reconstruction
+
+Explainer: KernelSHAP
+Found term (0, 1) at sample 1 out of 3
+Reconstructed DNF: (x_1 ∧ x_2)
+✗ Incorrect reconstruction
+
+Explainer: IntegratedGradients
+Found term (0, 1) at sample 1 out of 3
+Reconstructed DNF: (x_1 ∧ x_2)
+✗ Incorrect reconstruction
+
+Model: Decision Tree
+
+Explainer: LIME
+Found term (0, 1, 2) at sample 1 out of 3
+Found term (3, 4) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: KernelSHAP
+Found term (0, 1, 2) at sample 1 out of 3
+Found term (3, 4) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Explainer: TreeSHAP
+Found term (0, 1, 2) at sample 1 out of 3
+Found term (3, 4) at sample 2 out of 3
+Found term (6, 7, 8) at sample 3 out of 3
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+✓ Correct reconstruction!
+
+Model: CNN
+
+Explainer: LIME
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: KernelSHAP
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+Explainer: IntegratedGradients
+Reconstructed DNF: False
+✗ Incorrect reconstruction
+
+=== Approach 2: Reconstruction with 50 random samples for Simple_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (0, 1) at sample 2 out of 50
+Found term (0, 1) at sample 8 out of 50
+Found term (4, 5) at sample 9 out of 50
+Found term (0, 1) at sample 10 out of 50
+Found term (4, 5) at sample 15 out of 50
+Found term (4, 5) at sample 24 out of 50
+Found term (4, 5) at sample 25 out of 50
+Found term (4, 5) at sample 28 out of 50
+Found term (0, 1) at sample 30 out of 50
+Found term (0, 1) at sample 31 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 41 out of 50
+Found term (4, 5) at sample 42 out of 50
+Found term (0, 1) at sample 44 out of 50
+Found term (0, 1) at sample 47 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (0, 1) at sample 2 out of 50
+Found term (4, 5) at sample 9 out of 50
+Found term (0, 1) at sample 10 out of 50
+Found term (4, 5) at sample 15 out of 50
+Found term (0, 1) at sample 19 out of 50
+Found term (4, 5) at sample 24 out of 50
+Found term (4, 5) at sample 25 out of 50
+Found term (4, 5) at sample 28 out of 50
+Found term (0, 1) at sample 30 out of 50
+Found term (0, 1) at sample 31 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 41 out of 50
+Found term (4, 5) at sample 42 out of 50
+Found term (0, 1) at sample 44 out of 50
+Found term (0, 1) at sample 47 out of 50
+Found term (0, 1) at sample 49 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: IntegratedGradients
+Found term (0, 1) at sample 2 out of 50
+Found term (4, 5) at sample 15 out of 50
+Found term (4, 5) at sample 25 out of 50
+Found term (4, 5) at sample 28 out of 50
+Found term (0, 1) at sample 30 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 42 out of 50
+Found term (0, 1) at sample 47 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (4, 5) at sample 2 out of 50
+Found term (0, 1) at sample 3 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (4, 5) at sample 7 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (4, 5) at sample 23 out of 50
+Found term (0, 1) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 32 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at sample 2 out of 50
+Found term (0, 1) at sample 3 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (4, 5) at sample 7 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (4, 5) at sample 23 out of 50
+Found term (0, 1) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 32 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: TreeSHAP
+Found term (0, 1) at sample 1 out of 50
+Found term (4, 5) at sample 2 out of 50
+Found term (0, 1) at sample 3 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (4, 5) at sample 7 out of 50
+Found term (0, 1) at sample 12 out of 50
+Found term (0, 1) at sample 16 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (4, 5) at sample 23 out of 50
+Found term (0, 1) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 29 out of 50
+Found term (0, 1) at sample 32 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Using explainer: KernelSHAP
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Ranking of explainers (Approach 2):
+1. FCN-LIME: 100.00%
+2. FCN-KernelSHAP: 100.00%
+3. FCN-IntegratedGradients: 100.00%
+4. Decision Tree-LIME: 100.00%
+5. Decision Tree-KernelSHAP: 100.00%
+6. Decision Tree-TreeSHAP: 100.00%
+7. CNN-LIME: 56.25%
+8. CNN-KernelSHAP: 56.25%
+9. CNN-IntegratedGradients: 56.25%
+
+=== Approach 2: Reconstruction with 50 random samples for Example_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (4, 5) at sample 1 out of 50
+Found term (0, 1) at sample 2 out of 50
+Found term (0, 1) at sample 15 out of 50
+Found term (4, 5) at sample 18 out of 50
+Found term (4, 5) at sample 21 out of 50
+Found term (4, 5) at sample 22 out of 50
+Found term (4, 5) at sample 24 out of 50
+Found term (0, 1) at sample 26 out of 50
+Found term (0, 1) at sample 28 out of 50
+Found term (4, 5) at sample 31 out of 50
+Found term (4, 5) at sample 32 out of 50
+Found term (4, 5) at sample 35 out of 50
+Found term (0, 1) at sample 40 out of 50
+Found term (0, 1) at sample 41 out of 50
+Found term (0, 1) at sample 43 out of 50
+Found term (4, 5) at sample 45 out of 50
+Found term (0, 1) at sample 47 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 84.77% (434/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at sample 1 out of 50
+Found term (0, 1) at sample 2 out of 50
+Found term (0, 1) at sample 12 out of 50
+Found term (0, 1) at sample 15 out of 50
+Found term (4, 5) at sample 18 out of 50
+Found term (4, 5) at sample 21 out of 50
+Found term (4, 5) at sample 22 out of 50
+Found term (4, 5) at sample 24 out of 50
+Found term (0, 1) at sample 25 out of 50
+Found term (0, 1) at sample 26 out of 50
+Found term (0, 1) at sample 28 out of 50
+Found term (4, 5) at sample 31 out of 50
+Found term (4, 5) at sample 32 out of 50
+Found term (4, 5) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 40 out of 50
+Found term (0, 1) at sample 41 out of 50
+Found term (0, 1) at sample 43 out of 50
+Found term (4, 5) at sample 45 out of 50
+Found term (0, 1) at sample 47 out of 50
+Found term (0, 1) at sample 48 out of 50
+Found term (0, 1) at sample 49 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 84.77% (434/512)
+
+Using explainer: IntegratedGradients
+Found term (4, 5) at sample 1 out of 50
+Found term (0, 1) at sample 2 out of 50
+Found term (4, 5) at sample 18 out of 50
+Found term (4, 5) at sample 21 out of 50
+Found term (4, 5) at sample 22 out of 50
+Found term (4, 5) at sample 24 out of 50
+Found term (0, 1) at sample 26 out of 50
+Found term (4, 5) at sample 31 out of 50
+Found term (4, 5) at sample 32 out of 50
+Found term (4, 5) at sample 35 out of 50
+Found term (0, 1) at sample 43 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 84.77% (434/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (6, 7, 8) at sample 2 out of 50
+Found term (3, 4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (0, 1) at sample 7 out of 50
+Found term (6, 7, 8) at sample 8 out of 50
+Found term (3, 4, 5) at sample 9 out of 50
+Found term (0, 1) at sample 10 out of 50
+Found term (3, 4, 5) at sample 15 out of 50
+Found term (0, 1) at sample 16 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (6, 7, 8) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 28 out of 50
+Found term (0, 1) at sample 29 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Found term (6, 7, 8) at sample 42 out of 50
+Found term (0, 1) at sample 43 out of 50
+Found term (0, 1) at sample 44 out of 50
+Found term (0, 1) at sample 45 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (6, 7, 8) at sample 2 out of 50
+Found term (3, 4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (0, 1) at sample 7 out of 50
+Found term (3, 4, 5) at sample 9 out of 50
+Found term (0, 1) at sample 10 out of 50
+Found term (3, 4, 5) at sample 15 out of 50
+Found term (0, 1) at sample 16 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (6, 7, 8) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 28 out of 50
+Found term (0, 1) at sample 29 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Found term (6, 7, 8) at sample 42 out of 50
+Found term (0, 1) at sample 43 out of 50
+Found term (0, 1) at sample 44 out of 50
+Found term (0, 1) at sample 45 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: TreeSHAP
+Found term (6, 7, 8) at sample 2 out of 50
+Found term (3, 4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (0, 1) at sample 7 out of 50
+Found term (6, 7, 8) at sample 8 out of 50
+Found term (3, 4, 5) at sample 9 out of 50
+Found term (0, 1) at sample 10 out of 50
+Found term (3, 4, 5) at sample 15 out of 50
+Found term (0, 1) at sample 16 out of 50
+Found term (0, 1) at sample 17 out of 50
+Found term (0, 1) at sample 18 out of 50
+Found term (6, 7, 8) at sample 25 out of 50
+Found term (0, 1) at sample 27 out of 50
+Found term (0, 1) at sample 28 out of 50
+Found term (0, 1) at sample 29 out of 50
+Found term (0, 1) at sample 35 out of 50
+Found term (0, 1) at sample 36 out of 50
+Found term (0, 1) at sample 41 out of 50
+Found term (6, 7, 8) at sample 42 out of 50
+Found term (0, 1) at sample 43 out of 50
+Found term (0, 1) at sample 44 out of 50
+Found term (0, 1) at sample 45 out of 50
+Found term (0, 1) at sample 48 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: KernelSHAP
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Ranking of explainers (Approach 2):
+1. Decision Tree-LIME: 100.00%
+2. Decision Tree-KernelSHAP: 100.00%
+3. Decision Tree-TreeSHAP: 100.00%
+4. FCN-LIME: 84.77%
+5. FCN-KernelSHAP: 84.77%
+6. FCN-IntegratedGradients: 84.77%
+7. CNN-LIME: 57.42%
+8. CNN-KernelSHAP: 57.42%
+9. CNN-IntegratedGradients: 57.42%
+
+=== Approach 2: Reconstruction with 50 random samples for Complex_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (0, 1) at sample 2 out of 50
+Found term (0, 1) at sample 3 out of 50
+Found term (4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (4, 5) at sample 16 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (4, 5) at sample 31 out of 50
+Found term (4, 5) at sample 38 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 43 out of 50
+Found term (4, 5) at sample 47 out of 50
+Found term (0, 1) at sample 48 out of 50
+Found term (4, 5) at sample 49 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 68.36% (350/512)
+
+Using explainer: KernelSHAP
+Found term (0, 1) at sample 2 out of 50
+Found term (0, 1) at sample 3 out of 50
+Found term (4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (0, 1) at sample 7 out of 50
+Found term (0, 1) at sample 12 out of 50
+Found term (4, 5) at sample 16 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (0, 1) at sample 24 out of 50
+Found term (4, 5) at sample 31 out of 50
+Found term (4, 5) at sample 38 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 43 out of 50
+Found term (4, 5) at sample 47 out of 50
+Found term (0, 1) at sample 48 out of 50
+Found term (4, 5) at sample 49 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 68.36% (350/512)
+
+Using explainer: IntegratedGradients
+Found term (0, 1) at sample 3 out of 50
+Found term (4, 5) at sample 5 out of 50
+Found term (0, 1) at sample 6 out of 50
+Found term (0, 1) at sample 22 out of 50
+Found term (4, 5) at sample 38 out of 50
+Found term (4, 5) at sample 40 out of 50
+Found term (4, 5) at sample 43 out of 50
+Found term (4, 5) at sample 47 out of 50
+Found term (4, 5) at sample 50 out of 50
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 68.36% (350/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (3, 4) at sample 2 out of 50
+Found term (3, 4) at sample 8 out of 50
+Found term (3, 4) at sample 10 out of 50
+Found term (3, 4) at sample 15 out of 50
+Found term (3, 4) at sample 16 out of 50
+Found term (0, 1, 2) at sample 19 out of 50
+Found term (3, 4) at sample 29 out of 50
+Found term (3, 4) at sample 30 out of 50
+Found term (6, 7, 8) at sample 35 out of 50
+Found term (3, 4) at sample 41 out of 50
+Found term (0, 1, 2) at sample 47 out of 50
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (3, 4) at sample 2 out of 50
+Found term (6, 7, 8) at sample 6 out of 50
+Found term (3, 4) at sample 8 out of 50
+Found term (3, 4) at sample 10 out of 50
+Found term (3, 4) at sample 15 out of 50
+Found term (3, 4) at sample 16 out of 50
+Found term (0, 1, 2) at sample 19 out of 50
+Found term (3, 4) at sample 29 out of 50
+Found term (3, 4) at sample 30 out of 50
+Found term (6, 7, 8) at sample 35 out of 50
+Found term (3, 4) at sample 41 out of 50
+Found term (0, 1, 2) at sample 47 out of 50
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: TreeSHAP
+Found term (3, 4) at sample 2 out of 50
+Found term (6, 7, 8) at sample 6 out of 50
+Found term (3, 4) at sample 8 out of 50
+Found term (3, 4) at sample 10 out of 50
+Found term (3, 4) at sample 15 out of 50
+Found term (3, 4) at sample 16 out of 50
+Found term (3, 4) at sample 29 out of 50
+Found term (3, 4) at sample 30 out of 50
+Found term (6, 7, 8) at sample 35 out of 50
+Found term (3, 4) at sample 37 out of 50
+Found term (6, 7, 8) at sample 38 out of 50
+Found term (3, 4) at sample 41 out of 50
+Found term (0, 1, 2) at sample 47 out of 50
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: KernelSHAP
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Ranking of explainers (Approach 2):
+1. Decision Tree-LIME: 100.00%
+2. Decision Tree-KernelSHAP: 100.00%
+3. Decision Tree-TreeSHAP: 100.00%
+4. FCN-LIME: 68.36%
+5. FCN-KernelSHAP: 68.36%
+6. FCN-IntegratedGradients: 68.36%
+7. CNN-LIME: 57.42%
+8. CNN-KernelSHAP: 57.42%
+9. CNN-IntegratedGradients: 57.42%
+
+=== Approach 3: Full reconstruction over all inputs with timeout 30s for Simple_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 288 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 314 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 316 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 318 out of 512
+Found term (4, 5) at processed count 319 out of 512
+Found term (4, 5) at processed count 320 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 350 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 352 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 378 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (4, 5) at processed count 380 out of 512
+Found term (4, 5) at processed count 381 out of 512
+Found term (4, 5) at processed count 382 out of 512
+Found term (4, 5) at processed count 383 out of 512
+Found term (4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Timeout reached after processing 254 out of 512 inputs.
+Reconstructed DNF: (x_5 ∧ x_6)
+Reconstruction accuracy: 81.25% (416/512)
+
+Using explainer: IntegratedGradients
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 288 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 314 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 316 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 318 out of 512
+Found term (4, 5) at processed count 319 out of 512
+Found term (4, 5) at processed count 320 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 350 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 352 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 378 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (4, 5) at processed count 380 out of 512
+Found term (4, 5) at processed count 381 out of 512
+Found term (4, 5) at processed count 382 out of 512
+Found term (4, 5) at processed count 383 out of 512
+Found term (4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 400 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 408 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 425 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 428 out of 512
+Found term (0, 1) at processed count 429 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 431 out of 512
+Found term (0, 1) at processed count 432 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 436 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 438 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 440 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 461 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 468 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 472 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 491 out of 512
+Found term (0, 1) at processed count 492 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 494 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 496 out of 512
+Found term (0, 1) at processed count 497 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 499 out of 512
+Found term (0, 1) at processed count 500 out of 512
+Found term (0, 1) at processed count 501 out of 512
+Found term (0, 1) at processed count 502 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Found term (0, 1) at processed count 504 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Timeout reached after processing 189 out of 512 inputs.
+Reconstructed DNF: (x_5 ∧ x_6)
+Reconstruction accuracy: 81.25% (416/512)
+
+Using explainer: TreeSHAP
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 288 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 314 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 316 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 318 out of 512
+Found term (4, 5) at processed count 319 out of 512
+Found term (4, 5) at processed count 320 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 350 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 352 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 378 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (4, 5) at processed count 380 out of 512
+Found term (4, 5) at processed count 381 out of 512
+Found term (4, 5) at processed count 382 out of 512
+Found term (4, 5) at processed count 383 out of 512
+Found term (4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 400 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 408 out of 512
+Found term (0, 1) at processed count 409 out of 512
+Found term (0, 1) at processed count 410 out of 512
+Found term (0, 1) at processed count 411 out of 512
+Found term (0, 1) at processed count 412 out of 512
+Found term (0, 1) at processed count 413 out of 512
+Found term (0, 1) at processed count 414 out of 512
+Found term (0, 1) at processed count 415 out of 512
+Found term (0, 1) at processed count 416 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 425 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 428 out of 512
+Found term (0, 1) at processed count 429 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 431 out of 512
+Found term (0, 1) at processed count 432 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 436 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 438 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 440 out of 512
+Found term (0, 1) at processed count 441 out of 512
+Found term (0, 1) at processed count 442 out of 512
+Found term (0, 1) at processed count 443 out of 512
+Found term (0, 1) at processed count 444 out of 512
+Found term (0, 1) at processed count 445 out of 512
+Found term (0, 1) at processed count 446 out of 512
+Found term (0, 1) at processed count 447 out of 512
+Found term (0, 1) at processed count 448 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 461 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 468 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 472 out of 512
+Found term (0, 1) at processed count 473 out of 512
+Found term (0, 1) at processed count 474 out of 512
+Found term (0, 1) at processed count 475 out of 512
+Found term (0, 1) at processed count 476 out of 512
+Found term (0, 1) at processed count 477 out of 512
+Found term (0, 1) at processed count 478 out of 512
+Found term (0, 1) at processed count 479 out of 512
+Found term (0, 1) at processed count 480 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 491 out of 512
+Found term (0, 1) at processed count 492 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 494 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 496 out of 512
+Found term (0, 1) at processed count 497 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 499 out of 512
+Found term (0, 1) at processed count 500 out of 512
+Found term (0, 1) at processed count 501 out of 512
+Found term (0, 1) at processed count 502 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Found term (0, 1) at processed count 504 out of 512
+Found term (0, 1) at processed count 505 out of 512
+Found term (0, 1) at processed count 506 out of 512
+Found term (0, 1) at processed count 507 out of 512
+Found term (0, 1) at processed count 508 out of 512
+Found term (0, 1) at processed count 509 out of 512
+Found term (0, 1) at processed count 510 out of 512
+Found term (0, 1) at processed count 511 out of 512
+Found term (0, 1) at processed count 512 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Using explainer: KernelSHAP
+Timeout reached after processing 91 out of 512 inputs.
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 56.25% (288/512)
+
+Ranking of explainers (Approach 3):
+1. FCN-LIME: 100.00% (Processed 512/512)
+2. FCN-IntegratedGradients: 100.00% (Processed 512/512)
+3. Decision Tree-LIME: 100.00% (Processed 512/512)
+4. Decision Tree-TreeSHAP: 100.00% (Processed 512/512)
+5. FCN-KernelSHAP: 81.25% (Processed 254/512)
+6. Decision Tree-KernelSHAP: 81.25% (Processed 189/512)
+7. CNN-LIME: 56.25% (Processed 512/512)
+8. CNN-KernelSHAP: 56.25% (Processed 91/512)
+9. CNN-IntegratedGradients: 56.25% (Processed 512/512)
+
+=== Approach 3: Full reconstruction over all inputs with timeout 30s for Example_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 288 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 314 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 316 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 318 out of 512
+Found term (4, 5) at processed count 319 out of 512
+Found term (4, 5) at processed count 320 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 350 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 352 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 378 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (4, 5) at processed count 380 out of 512
+Found term (4, 5) at processed count 381 out of 512
+Found term (4, 5) at processed count 382 out of 512
+Found term (4, 5) at processed count 383 out of 512
+Found term (4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 84.77% (434/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Timeout reached after processing 259 out of 512 inputs.
+Reconstructed DNF: (x_5 ∧ x_6)
+Reconstruction accuracy: 66.02% (338/512)
+
+Using explainer: IntegratedGradients
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 84.77% (434/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (3, 4, 6, 8) at processed count 54 out of 512
+Found term (6, 7, 8) at processed count 56 out of 512
+Found term (3, 4, 5) at processed count 57 out of 512
+Found term (3, 4, 5) at processed count 58 out of 512
+Found term (3, 4, 5) at processed count 59 out of 512
+Found term (3, 4, 5) at processed count 60 out of 512
+Found term (3, 4, 5) at processed count 61 out of 512
+Found term (3, 4, 5) at processed count 62 out of 512
+Found term (3, 4, 5) at processed count 63 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4, 6, 8) at processed count 118 out of 512
+Found term (6, 7, 8) at processed count 120 out of 512
+Found term (3, 4, 5) at processed count 121 out of 512
+Found term (3, 4, 5) at processed count 122 out of 512
+Found term (3, 4, 5) at processed count 123 out of 512
+Found term (3, 4, 5) at processed count 124 out of 512
+Found term (3, 4, 5) at processed count 125 out of 512
+Found term (3, 4, 5) at processed count 126 out of 512
+Found term (3, 4, 5) at processed count 127 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (3, 4, 6, 8) at processed count 182 out of 512
+Found term (6, 7, 8) at processed count 184 out of 512
+Found term (3, 4, 5) at processed count 185 out of 512
+Found term (3, 4, 5) at processed count 186 out of 512
+Found term (3, 4, 5) at processed count 187 out of 512
+Found term (3, 4, 5) at processed count 188 out of 512
+Found term (3, 4, 5) at processed count 189 out of 512
+Found term (3, 4, 5) at processed count 190 out of 512
+Found term (3, 4, 5) at processed count 191 out of 512
+Found term (6, 7, 8) at processed count 200 out of 512
+Found term (6, 7, 8) at processed count 208 out of 512
+Found term (6, 7, 8) at processed count 216 out of 512
+Found term (6, 7, 8) at processed count 224 out of 512
+Found term (6, 7, 8) at processed count 232 out of 512
+Found term (6, 7, 8) at processed count 240 out of 512
+Found term (6, 7, 8) at processed count 248 out of 512
+Found term (3, 4, 5) at processed count 249 out of 512
+Found term (3, 4, 5) at processed count 250 out of 512
+Found term (3, 4, 5) at processed count 251 out of 512
+Found term (3, 4, 5) at processed count 252 out of 512
+Found term (3, 4, 5) at processed count 253 out of 512
+Found term (3, 4, 5) at processed count 254 out of 512
+Found term (3, 4, 5) at processed count 255 out of 512
+Found term (6, 7, 8) at processed count 264 out of 512
+Found term (0, 5, 7, 8) at processed count 268 out of 512
+Found term (6, 7, 8) at processed count 272 out of 512
+Found term (6, 7, 8) at processed count 280 out of 512
+Found term (6, 7, 8) at processed count 288 out of 512
+Found term (6, 7, 8) at processed count 296 out of 512
+Found term (0, 5, 7, 8) at processed count 300 out of 512
+Found term (6, 7, 8) at processed count 304 out of 512
+Found term (3, 4, 5) at processed count 313 out of 512
+Found term (3, 4, 5) at processed count 314 out of 512
+Found term (3, 4, 5) at processed count 315 out of 512
+Found term (3, 4, 5) at processed count 316 out of 512
+Found term (3, 4, 5) at processed count 317 out of 512
+Found term (3, 4, 5) at processed count 318 out of 512
+Found term (3, 4, 5) at processed count 319 out of 512
+Found term (6, 7, 8) at processed count 328 out of 512
+Found term (0, 5, 7, 8) at processed count 332 out of 512
+Found term (6, 7, 8) at processed count 336 out of 512
+Found term (6, 7, 8) at processed count 344 out of 512
+Found term (6, 7, 8) at processed count 352 out of 512
+Found term (6, 7, 8) at processed count 360 out of 512
+Found term (6, 7, 8) at processed count 368 out of 512
+Found term (3, 4, 5) at processed count 377 out of 512
+Found term (3, 4, 5) at processed count 378 out of 512
+Found term (3, 4, 5) at processed count 379 out of 512
+Found term (3, 4, 5) at processed count 380 out of 512
+Found term (3, 4, 5) at processed count 381 out of 512
+Found term (3, 4, 5) at processed count 382 out of 512
+Found term (3, 4, 5) at processed count 383 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 409 out of 512
+Found term (0, 1) at processed count 410 out of 512
+Found term (0, 1) at processed count 411 out of 512
+Found term (0, 1) at processed count 412 out of 512
+Found term (0, 1) at processed count 413 out of 512
+Found term (0, 1) at processed count 414 out of 512
+Found term (0, 1) at processed count 415 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 425 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 428 out of 512
+Found term (0, 1) at processed count 429 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 431 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 436 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 438 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 461 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 468 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 473 out of 512
+Found term (0, 1) at processed count 474 out of 512
+Found term (0, 1) at processed count 475 out of 512
+Found term (0, 1) at processed count 476 out of 512
+Found term (0, 1) at processed count 477 out of 512
+Found term (0, 1) at processed count 478 out of 512
+Found term (0, 1) at processed count 479 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 491 out of 512
+Found term (0, 1) at processed count 492 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 494 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 497 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 499 out of 512
+Found term (0, 1) at processed count 500 out of 512
+Found term (0, 1) at processed count 501 out of 512
+Found term (0, 1) at processed count 502 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Found term (0, 1) at processed count 512 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_1 ∧ x_6 ∧ x_8 ∧ x_9) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_4 ∧ x_5 ∧ x_7 ∧ x_9) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 97.66% (500/512)
+
+Using explainer: KernelSHAP
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (6, 7, 8) at processed count 56 out of 512
+Found term (3, 4, 5) at processed count 57 out of 512
+Found term (3, 4, 5) at processed count 58 out of 512
+Found term (3, 4, 5) at processed count 59 out of 512
+Found term (3, 4, 5) at processed count 60 out of 512
+Found term (3, 4, 5) at processed count 61 out of 512
+Found term (3, 4, 5) at processed count 62 out of 512
+Found term (3, 4, 5) at processed count 63 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4, 6, 8) at processed count 118 out of 512
+Found term (3, 4, 5) at processed count 121 out of 512
+Found term (3, 4, 5) at processed count 122 out of 512
+Found term (3, 4, 5) at processed count 123 out of 512
+Found term (3, 4, 5) at processed count 124 out of 512
+Found term (3, 4, 5) at processed count 125 out of 512
+Found term (3, 4, 5) at processed count 126 out of 512
+Found term (3, 4, 5) at processed count 127 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (6, 7, 8) at processed count 184 out of 512
+Found term (3, 4, 5) at processed count 185 out of 512
+Found term (3, 4, 5) at processed count 186 out of 512
+Found term (3, 4, 5) at processed count 187 out of 512
+Found term (3, 4, 5) at processed count 188 out of 512
+Found term (3, 4, 5) at processed count 189 out of 512
+Timeout reached after processing 190 out of 512 inputs.
+Reconstructed DNF: (x_4 ∧ x_5 ∧ x_6) ∨ (x_4 ∧ x_5 ∧ x_7 ∧ x_9) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 80.08% (410/512)
+
+Using explainer: TreeSHAP
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (3, 4, 5) at processed count 57 out of 512
+Found term (3, 4, 5) at processed count 58 out of 512
+Found term (3, 4, 5) at processed count 59 out of 512
+Found term (3, 4, 5) at processed count 60 out of 512
+Found term (3, 4, 5) at processed count 61 out of 512
+Found term (3, 4, 5) at processed count 62 out of 512
+Found term (3, 4, 5) at processed count 63 out of 512
+Found term (3, 4, 5) at processed count 64 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4, 5) at processed count 121 out of 512
+Found term (3, 4, 5) at processed count 122 out of 512
+Found term (3, 4, 5) at processed count 123 out of 512
+Found term (3, 4, 5) at processed count 124 out of 512
+Found term (3, 4, 5) at processed count 125 out of 512
+Found term (3, 4, 5) at processed count 126 out of 512
+Found term (3, 4, 5) at processed count 127 out of 512
+Found term (3, 4, 5) at processed count 128 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (3, 4, 5) at processed count 185 out of 512
+Found term (3, 4, 5) at processed count 186 out of 512
+Found term (3, 4, 5) at processed count 187 out of 512
+Found term (3, 4, 5) at processed count 188 out of 512
+Found term (3, 4, 5) at processed count 189 out of 512
+Found term (3, 4, 5) at processed count 190 out of 512
+Found term (3, 4, 5) at processed count 191 out of 512
+Found term (3, 4, 5) at processed count 192 out of 512
+Found term (6, 7, 8) at processed count 200 out of 512
+Found term (6, 7, 8) at processed count 208 out of 512
+Found term (6, 7, 8) at processed count 216 out of 512
+Found term (6, 7, 8) at processed count 224 out of 512
+Found term (6, 7, 8) at processed count 232 out of 512
+Found term (6, 7, 8) at processed count 240 out of 512
+Found term (3, 4, 5) at processed count 249 out of 512
+Found term (3, 4, 5) at processed count 250 out of 512
+Found term (3, 4, 5) at processed count 251 out of 512
+Found term (3, 4, 5) at processed count 252 out of 512
+Found term (3, 4, 5) at processed count 253 out of 512
+Found term (3, 4, 5) at processed count 254 out of 512
+Found term (3, 4, 5) at processed count 255 out of 512
+Found term (3, 4, 5) at processed count 256 out of 512
+Found term (6, 7, 8) at processed count 264 out of 512
+Found term (6, 7, 8) at processed count 280 out of 512
+Found term (6, 7, 8) at processed count 296 out of 512
+Found term (6, 7, 8) at processed count 312 out of 512
+Found term (3, 4, 5) at processed count 313 out of 512
+Found term (3, 4, 5) at processed count 314 out of 512
+Found term (3, 4, 5) at processed count 315 out of 512
+Found term (3, 4, 5) at processed count 316 out of 512
+Found term (3, 4, 5) at processed count 317 out of 512
+Found term (3, 4, 5) at processed count 318 out of 512
+Found term (3, 4, 5) at processed count 319 out of 512
+Found term (3, 4, 5) at processed count 320 out of 512
+Found term (6, 7, 8) at processed count 328 out of 512
+Found term (6, 7, 8) at processed count 344 out of 512
+Found term (6, 7, 8) at processed count 360 out of 512
+Found term (6, 7, 8) at processed count 376 out of 512
+Found term (3, 4, 5) at processed count 377 out of 512
+Found term (3, 4, 5) at processed count 378 out of 512
+Found term (3, 4, 5) at processed count 379 out of 512
+Found term (3, 4, 5) at processed count 380 out of 512
+Found term (3, 4, 5) at processed count 381 out of 512
+Found term (3, 4, 5) at processed count 382 out of 512
+Found term (3, 4, 5) at processed count 383 out of 512
+Found term (3, 4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 400 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 408 out of 512
+Found term (0, 1) at processed count 409 out of 512
+Found term (0, 1) at processed count 410 out of 512
+Found term (0, 1) at processed count 411 out of 512
+Found term (0, 1) at processed count 412 out of 512
+Found term (0, 1) at processed count 413 out of 512
+Found term (0, 1) at processed count 414 out of 512
+Found term (0, 1) at processed count 415 out of 512
+Found term (0, 1) at processed count 416 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 425 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 428 out of 512
+Found term (0, 1) at processed count 429 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 431 out of 512
+Found term (0, 1) at processed count 432 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 436 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 438 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 440 out of 512
+Found term (0, 1) at processed count 441 out of 512
+Found term (0, 1) at processed count 442 out of 512
+Found term (0, 1) at processed count 443 out of 512
+Found term (0, 1) at processed count 444 out of 512
+Found term (0, 1) at processed count 445 out of 512
+Found term (0, 1) at processed count 446 out of 512
+Found term (0, 1) at processed count 447 out of 512
+Found term (0, 1) at processed count 448 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 461 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 468 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 472 out of 512
+Found term (0, 1) at processed count 473 out of 512
+Found term (0, 1) at processed count 474 out of 512
+Found term (0, 1) at processed count 475 out of 512
+Found term (0, 1) at processed count 476 out of 512
+Found term (0, 1) at processed count 477 out of 512
+Found term (0, 1) at processed count 478 out of 512
+Found term (0, 1) at processed count 479 out of 512
+Found term (0, 1) at processed count 480 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 491 out of 512
+Found term (0, 1) at processed count 492 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 494 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 496 out of 512
+Found term (0, 1) at processed count 497 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 499 out of 512
+Found term (0, 1) at processed count 500 out of 512
+Found term (0, 1) at processed count 501 out of 512
+Found term (0, 1) at processed count 502 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Found term (0, 1) at processed count 504 out of 512
+Found term (0, 1) at processed count 505 out of 512
+Found term (0, 1) at processed count 506 out of 512
+Found term (0, 1) at processed count 507 out of 512
+Found term (0, 1) at processed count 508 out of 512
+Found term (0, 1) at processed count 509 out of 512
+Found term (0, 1) at processed count 510 out of 512
+Found term (0, 1) at processed count 511 out of 512
+Found term (0, 1) at processed count 512 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_4 ∧ x_5 ∧ x_6) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: KernelSHAP
+Timeout reached after processing 89 out of 512 inputs.
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Ranking of explainers (Approach 3):
+1. Decision Tree-TreeSHAP: 100.00% (Processed 512/512)
+2. Decision Tree-LIME: 97.66% (Processed 512/512)
+3. FCN-LIME: 84.77% (Processed 512/512)
+4. FCN-IntegratedGradients: 84.77% (Processed 512/512)
+5. Decision Tree-KernelSHAP: 80.08% (Processed 190/512)
+6. FCN-KernelSHAP: 66.02% (Processed 259/512)
+7. CNN-LIME: 57.42% (Processed 512/512)
+8. CNN-KernelSHAP: 57.42% (Processed 89/512)
+9. CNN-IntegratedGradients: 57.42% (Processed 512/512)
+
+=== Approach 3: Full reconstruction over all inputs with timeout 30s for Complex_DNF ===
+Loaded weights from models_weights/FCN.pt
+Loaded weights from models_weights/CNN.pt
+
+Model: FCN
+
+Using explainer: LIME
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 288 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 314 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 316 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 318 out of 512
+Found term (4, 5) at processed count 319 out of 512
+Found term (4, 5) at processed count 320 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 350 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 352 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 378 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (4, 5) at processed count 380 out of 512
+Found term (4, 5) at processed count 381 out of 512
+Found term (4, 5) at processed count 382 out of 512
+Found term (4, 5) at processed count 383 out of 512
+Found term (4, 5) at processed count 384 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 393 out of 512
+Found term (0, 1) at processed count 394 out of 512
+Found term (0, 1) at processed count 395 out of 512
+Found term (0, 1) at processed count 396 out of 512
+Found term (0, 1) at processed count 397 out of 512
+Found term (0, 1) at processed count 398 out of 512
+Found term (0, 1) at processed count 399 out of 512
+Found term (0, 1) at processed count 401 out of 512
+Found term (0, 1) at processed count 402 out of 512
+Found term (0, 1) at processed count 403 out of 512
+Found term (0, 1) at processed count 404 out of 512
+Found term (0, 1) at processed count 405 out of 512
+Found term (0, 1) at processed count 406 out of 512
+Found term (0, 1) at processed count 407 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 426 out of 512
+Found term (0, 1) at processed count 427 out of 512
+Found term (0, 1) at processed count 430 out of 512
+Found term (0, 1) at processed count 433 out of 512
+Found term (0, 1) at processed count 434 out of 512
+Found term (0, 1) at processed count 435 out of 512
+Found term (0, 1) at processed count 437 out of 512
+Found term (0, 1) at processed count 439 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 457 out of 512
+Found term (0, 1) at processed count 458 out of 512
+Found term (0, 1) at processed count 459 out of 512
+Found term (0, 1) at processed count 460 out of 512
+Found term (0, 1) at processed count 462 out of 512
+Found term (0, 1) at processed count 463 out of 512
+Found term (0, 1) at processed count 464 out of 512
+Found term (0, 1) at processed count 465 out of 512
+Found term (0, 1) at processed count 466 out of 512
+Found term (0, 1) at processed count 467 out of 512
+Found term (0, 1) at processed count 469 out of 512
+Found term (0, 1) at processed count 470 out of 512
+Found term (0, 1) at processed count 471 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Found term (0, 1) at processed count 489 out of 512
+Found term (0, 1) at processed count 490 out of 512
+Found term (0, 1) at processed count 493 out of 512
+Found term (0, 1) at processed count 495 out of 512
+Found term (0, 1) at processed count 498 out of 512
+Found term (0, 1) at processed count 503 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 68.36% (350/512)
+
+Using explainer: KernelSHAP
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 191 out of 512
+Found term (4, 5) at processed count 192 out of 512
+Found term (4, 5) at processed count 217 out of 512
+Found term (4, 5) at processed count 218 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 253 out of 512
+Found term (4, 5) at processed count 254 out of 512
+Found term (4, 5) at processed count 255 out of 512
+Found term (4, 5) at processed count 256 out of 512
+Timeout reached after processing 263 out of 512 inputs.
+Reconstructed DNF: (x_5 ∧ x_6)
+Reconstruction accuracy: 63.28% (324/512)
+
+Using explainer: IntegratedGradients
+Found term (4, 5) at processed count 25 out of 512
+Found term (4, 5) at processed count 26 out of 512
+Found term (4, 5) at processed count 27 out of 512
+Found term (4, 5) at processed count 28 out of 512
+Found term (4, 5) at processed count 29 out of 512
+Found term (4, 5) at processed count 30 out of 512
+Found term (4, 5) at processed count 31 out of 512
+Found term (4, 5) at processed count 32 out of 512
+Found term (4, 5) at processed count 57 out of 512
+Found term (4, 5) at processed count 58 out of 512
+Found term (4, 5) at processed count 59 out of 512
+Found term (4, 5) at processed count 60 out of 512
+Found term (4, 5) at processed count 61 out of 512
+Found term (4, 5) at processed count 62 out of 512
+Found term (4, 5) at processed count 63 out of 512
+Found term (4, 5) at processed count 64 out of 512
+Found term (4, 5) at processed count 89 out of 512
+Found term (4, 5) at processed count 90 out of 512
+Found term (4, 5) at processed count 91 out of 512
+Found term (4, 5) at processed count 92 out of 512
+Found term (4, 5) at processed count 93 out of 512
+Found term (4, 5) at processed count 94 out of 512
+Found term (4, 5) at processed count 95 out of 512
+Found term (4, 5) at processed count 96 out of 512
+Found term (4, 5) at processed count 121 out of 512
+Found term (4, 5) at processed count 122 out of 512
+Found term (4, 5) at processed count 123 out of 512
+Found term (4, 5) at processed count 124 out of 512
+Found term (4, 5) at processed count 125 out of 512
+Found term (4, 5) at processed count 126 out of 512
+Found term (4, 5) at processed count 127 out of 512
+Found term (4, 5) at processed count 128 out of 512
+Found term (4, 5) at processed count 153 out of 512
+Found term (4, 5) at processed count 154 out of 512
+Found term (4, 5) at processed count 155 out of 512
+Found term (4, 5) at processed count 156 out of 512
+Found term (4, 5) at processed count 157 out of 512
+Found term (4, 5) at processed count 158 out of 512
+Found term (4, 5) at processed count 159 out of 512
+Found term (4, 5) at processed count 160 out of 512
+Found term (4, 5) at processed count 185 out of 512
+Found term (4, 5) at processed count 186 out of 512
+Found term (4, 5) at processed count 187 out of 512
+Found term (4, 5) at processed count 188 out of 512
+Found term (4, 5) at processed count 189 out of 512
+Found term (4, 5) at processed count 190 out of 512
+Found term (4, 5) at processed count 219 out of 512
+Found term (4, 5) at processed count 220 out of 512
+Found term (4, 5) at processed count 221 out of 512
+Found term (4, 5) at processed count 222 out of 512
+Found term (4, 5) at processed count 223 out of 512
+Found term (4, 5) at processed count 224 out of 512
+Found term (4, 5) at processed count 249 out of 512
+Found term (4, 5) at processed count 250 out of 512
+Found term (4, 5) at processed count 251 out of 512
+Found term (4, 5) at processed count 252 out of 512
+Found term (4, 5) at processed count 281 out of 512
+Found term (4, 5) at processed count 282 out of 512
+Found term (4, 5) at processed count 283 out of 512
+Found term (4, 5) at processed count 284 out of 512
+Found term (4, 5) at processed count 285 out of 512
+Found term (4, 5) at processed count 286 out of 512
+Found term (4, 5) at processed count 287 out of 512
+Found term (4, 5) at processed count 313 out of 512
+Found term (4, 5) at processed count 315 out of 512
+Found term (4, 5) at processed count 317 out of 512
+Found term (4, 5) at processed count 345 out of 512
+Found term (4, 5) at processed count 346 out of 512
+Found term (4, 5) at processed count 347 out of 512
+Found term (4, 5) at processed count 348 out of 512
+Found term (4, 5) at processed count 349 out of 512
+Found term (4, 5) at processed count 351 out of 512
+Found term (4, 5) at processed count 377 out of 512
+Found term (4, 5) at processed count 379 out of 512
+Found term (0, 1) at processed count 385 out of 512
+Found term (0, 1) at processed count 386 out of 512
+Found term (0, 1) at processed count 387 out of 512
+Found term (0, 1) at processed count 388 out of 512
+Found term (0, 1) at processed count 389 out of 512
+Found term (0, 1) at processed count 390 out of 512
+Found term (0, 1) at processed count 391 out of 512
+Found term (0, 1) at processed count 392 out of 512
+Found term (0, 1) at processed count 417 out of 512
+Found term (0, 1) at processed count 418 out of 512
+Found term (0, 1) at processed count 419 out of 512
+Found term (0, 1) at processed count 420 out of 512
+Found term (0, 1) at processed count 421 out of 512
+Found term (0, 1) at processed count 422 out of 512
+Found term (0, 1) at processed count 423 out of 512
+Found term (0, 1) at processed count 424 out of 512
+Found term (0, 1) at processed count 449 out of 512
+Found term (0, 1) at processed count 450 out of 512
+Found term (0, 1) at processed count 451 out of 512
+Found term (0, 1) at processed count 452 out of 512
+Found term (0, 1) at processed count 453 out of 512
+Found term (0, 1) at processed count 454 out of 512
+Found term (0, 1) at processed count 455 out of 512
+Found term (0, 1) at processed count 456 out of 512
+Found term (0, 1) at processed count 481 out of 512
+Found term (0, 1) at processed count 482 out of 512
+Found term (0, 1) at processed count 483 out of 512
+Found term (0, 1) at processed count 484 out of 512
+Found term (0, 1) at processed count 485 out of 512
+Found term (0, 1) at processed count 486 out of 512
+Found term (0, 1) at processed count 487 out of 512
+Found term (0, 1) at processed count 488 out of 512
+Reconstructed DNF: (x_1 ∧ x_2) ∨ (x_5 ∧ x_6)
+Reconstruction accuracy: 68.36% (350/512)
+
+Model: Decision Tree
+
+Using explainer: LIME
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (3, 4) at processed count 49 out of 512
+Found term (3, 4) at processed count 50 out of 512
+Found term (3, 4) at processed count 51 out of 512
+Found term (3, 4) at processed count 52 out of 512
+Found term (3, 4) at processed count 53 out of 512
+Found term (3, 4) at processed count 54 out of 512
+Found term (3, 4) at processed count 55 out of 512
+Found term (3, 4) at processed count 57 out of 512
+Found term (3, 4) at processed count 58 out of 512
+Found term (3, 4) at processed count 59 out of 512
+Found term (3, 4) at processed count 60 out of 512
+Found term (3, 4) at processed count 61 out of 512
+Found term (3, 4) at processed count 62 out of 512
+Found term (3, 4) at processed count 63 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4) at processed count 113 out of 512
+Found term (3, 4) at processed count 114 out of 512
+Found term (3, 4) at processed count 115 out of 512
+Found term (3, 4) at processed count 116 out of 512
+Found term (3, 4) at processed count 117 out of 512
+Found term (3, 4) at processed count 118 out of 512
+Found term (3, 4) at processed count 119 out of 512
+Found term (3, 4) at processed count 121 out of 512
+Found term (3, 4) at processed count 122 out of 512
+Found term (3, 4) at processed count 123 out of 512
+Found term (3, 4) at processed count 124 out of 512
+Found term (3, 4) at processed count 125 out of 512
+Found term (3, 4) at processed count 126 out of 512
+Found term (3, 4) at processed count 127 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (3, 4) at processed count 177 out of 512
+Found term (3, 4) at processed count 178 out of 512
+Found term (3, 4) at processed count 179 out of 512
+Found term (3, 4) at processed count 180 out of 512
+Found term (3, 4) at processed count 181 out of 512
+Found term (3, 4) at processed count 182 out of 512
+Found term (3, 4) at processed count 183 out of 512
+Found term (3, 4) at processed count 185 out of 512
+Found term (3, 4) at processed count 186 out of 512
+Found term (3, 4) at processed count 187 out of 512
+Found term (3, 4) at processed count 188 out of 512
+Found term (3, 4) at processed count 189 out of 512
+Found term (3, 4) at processed count 190 out of 512
+Found term (3, 4) at processed count 191 out of 512
+Found term (6, 7, 8) at processed count 200 out of 512
+Found term (6, 7, 8) at processed count 208 out of 512
+Found term (6, 7, 8) at processed count 216 out of 512
+Found term (6, 7, 8) at processed count 224 out of 512
+Found term (1, 2, 3, 7) at processed count 227 out of 512
+Found term (1, 2, 3, 7) at processed count 231 out of 512
+Found term (6, 7, 8) at processed count 232 out of 512
+Found term (1, 2, 3, 7) at processed count 235 out of 512
+Found term (1, 2, 3, 7) at processed count 239 out of 512
+Found term (3, 4) at processed count 241 out of 512
+Found term (3, 4) at processed count 242 out of 512
+Found term (3, 4) at processed count 243 out of 512
+Found term (3, 4) at processed count 244 out of 512
+Found term (3, 4) at processed count 245 out of 512
+Found term (3, 4) at processed count 246 out of 512
+Found term (3, 4) at processed count 247 out of 512
+Found term (3, 4) at processed count 249 out of 512
+Found term (3, 4) at processed count 250 out of 512
+Found term (3, 4) at processed count 251 out of 512
+Found term (3, 4) at processed count 252 out of 512
+Found term (3, 4) at processed count 253 out of 512
+Found term (3, 4) at processed count 254 out of 512
+Found term (3, 4) at processed count 255 out of 512
+Found term (6, 7, 8) at processed count 264 out of 512
+Found term (6, 7, 8) at processed count 272 out of 512
+Found term (6, 7, 8) at processed count 280 out of 512
+Found term (6, 7, 8) at processed count 288 out of 512
+Found term (6, 7, 8) at processed count 296 out of 512
+Found term (6, 7, 8) at processed count 304 out of 512
+Found term (3, 4) at processed count 305 out of 512
+Found term (3, 4) at processed count 306 out of 512
+Found term (3, 4) at processed count 307 out of 512
+Found term (3, 4) at processed count 308 out of 512
+Found term (3, 4) at processed count 309 out of 512
+Found term (3, 4) at processed count 310 out of 512
+Found term (3, 4) at processed count 311 out of 512
+Found term (3, 4) at processed count 313 out of 512
+Found term (3, 4) at processed count 314 out of 512
+Found term (3, 4) at processed count 315 out of 512
+Found term (3, 4) at processed count 316 out of 512
+Found term (3, 4) at processed count 317 out of 512
+Found term (3, 4) at processed count 318 out of 512
+Found term (3, 4) at processed count 319 out of 512
+Found term (0, 2, 6, 7) at processed count 327 out of 512
+Found term (6, 7, 8) at processed count 328 out of 512
+Found term (0, 2, 6, 7) at processed count 335 out of 512
+Found term (6, 7, 8) at processed count 336 out of 512
+Found term (6, 7, 8) at processed count 352 out of 512
+Found term (6, 7, 8) at processed count 360 out of 512
+Found term (6, 7, 8) at processed count 368 out of 512
+Found term (3, 4) at processed count 369 out of 512
+Found term (3, 4) at processed count 370 out of 512
+Found term (3, 4) at processed count 371 out of 512
+Found term (3, 4) at processed count 372 out of 512
+Found term (3, 4) at processed count 373 out of 512
+Found term (3, 4) at processed count 374 out of 512
+Found term (3, 4) at processed count 375 out of 512
+Found term (3, 4) at processed count 377 out of 512
+Found term (3, 4) at processed count 378 out of 512
+Found term (3, 4) at processed count 379 out of 512
+Found term (3, 4) at processed count 380 out of 512
+Found term (3, 4) at processed count 381 out of 512
+Found term (3, 4) at processed count 382 out of 512
+Found term (3, 4) at processed count 383 out of 512
+Found term (6, 7, 8) at processed count 392 out of 512
+Found term (6, 7, 8) at processed count 400 out of 512
+Found term (6, 7, 8) at processed count 408 out of 512
+Found term (6, 7, 8) at processed count 416 out of 512
+Found term (6, 7, 8) at processed count 424 out of 512
+Found term (6, 7, 8) at processed count 432 out of 512
+Found term (3, 4) at processed count 433 out of 512
+Found term (3, 4) at processed count 434 out of 512
+Found term (3, 4) at processed count 435 out of 512
+Found term (3, 4) at processed count 436 out of 512
+Found term (3, 4) at processed count 437 out of 512
+Found term (3, 4) at processed count 438 out of 512
+Found term (3, 4) at processed count 439 out of 512
+Found term (3, 4) at processed count 441 out of 512
+Found term (3, 4) at processed count 442 out of 512
+Found term (3, 4) at processed count 443 out of 512
+Found term (3, 4) at processed count 444 out of 512
+Found term (3, 4) at processed count 445 out of 512
+Found term (3, 4) at processed count 446 out of 512
+Found term (3, 4) at processed count 447 out of 512
+Found term (0, 1, 2) at processed count 449 out of 512
+Found term (0, 1, 2) at processed count 450 out of 512
+Found term (0, 1, 2) at processed count 451 out of 512
+Found term (0, 1, 2) at processed count 452 out of 512
+Found term (0, 1, 2) at processed count 453 out of 512
+Found term (0, 1, 2) at processed count 454 out of 512
+Found term (0, 1, 2) at processed count 455 out of 512
+Found term (0, 1, 2) at processed count 457 out of 512
+Found term (0, 1, 2) at processed count 458 out of 512
+Found term (0, 1, 2) at processed count 459 out of 512
+Found term (0, 1, 2) at processed count 460 out of 512
+Found term (0, 1, 2) at processed count 461 out of 512
+Found term (0, 1, 2) at processed count 462 out of 512
+Found term (0, 1, 2) at processed count 463 out of 512
+Found term (0, 1, 2) at processed count 465 out of 512
+Found term (0, 1, 2) at processed count 466 out of 512
+Found term (0, 1, 2) at processed count 467 out of 512
+Found term (0, 1, 2) at processed count 468 out of 512
+Found term (0, 1, 2) at processed count 469 out of 512
+Found term (0, 1, 2) at processed count 470 out of 512
+Found term (0, 1, 2) at processed count 471 out of 512
+Found term (0, 1, 2) at processed count 473 out of 512
+Found term (0, 1, 2) at processed count 474 out of 512
+Found term (0, 1, 2) at processed count 475 out of 512
+Found term (0, 1, 2) at processed count 476 out of 512
+Found term (0, 1, 2) at processed count 477 out of 512
+Found term (0, 1, 2) at processed count 478 out of 512
+Found term (0, 1, 2) at processed count 479 out of 512
+Found term (0, 1, 2) at processed count 481 out of 512
+Found term (0, 1, 2) at processed count 482 out of 512
+Found term (0, 1, 2) at processed count 483 out of 512
+Found term (0, 1, 2) at processed count 484 out of 512
+Found term (0, 1, 2) at processed count 485 out of 512
+Found term (0, 1, 2) at processed count 486 out of 512
+Found term (0, 1, 2) at processed count 487 out of 512
+Found term (0, 1, 2) at processed count 489 out of 512
+Found term (0, 1, 2) at processed count 490 out of 512
+Found term (0, 1, 2) at processed count 491 out of 512
+Found term (0, 1, 2) at processed count 492 out of 512
+Found term (0, 1, 2) at processed count 493 out of 512
+Found term (0, 1, 2) at processed count 494 out of 512
+Found term (0, 1, 2) at processed count 495 out of 512
+Found term (3, 4) at processed count 504 out of 512
+Found term (3, 4) at processed count 511 out of 512
+Found term (3, 4) at processed count 512 out of 512
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_1 ∧ x_3 ∧ x_7 ∧ x_8) ∨ (x_2 ∧ x_3 ∧ x_4 ∧ x_8) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 97.66% (500/512)
+
+Using explainer: KernelSHAP
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (3, 4) at processed count 49 out of 512
+Found term (3, 4) at processed count 50 out of 512
+Found term (3, 4) at processed count 51 out of 512
+Found term (3, 4) at processed count 52 out of 512
+Found term (3, 4) at processed count 53 out of 512
+Found term (3, 4) at processed count 54 out of 512
+Found term (3, 4) at processed count 55 out of 512
+Found term (3, 4) at processed count 57 out of 512
+Found term (3, 4) at processed count 58 out of 512
+Found term (3, 4) at processed count 59 out of 512
+Found term (3, 4) at processed count 60 out of 512
+Found term (3, 4) at processed count 61 out of 512
+Found term (3, 4) at processed count 62 out of 512
+Found term (3, 4) at processed count 63 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4) at processed count 113 out of 512
+Found term (3, 4) at processed count 114 out of 512
+Found term (3, 4) at processed count 115 out of 512
+Found term (3, 4) at processed count 116 out of 512
+Found term (3, 4) at processed count 117 out of 512
+Found term (3, 4) at processed count 118 out of 512
+Found term (3, 4) at processed count 119 out of 512
+Found term (3, 4) at processed count 121 out of 512
+Found term (3, 4) at processed count 122 out of 512
+Found term (3, 4) at processed count 123 out of 512
+Found term (3, 4) at processed count 124 out of 512
+Found term (3, 4) at processed count 125 out of 512
+Found term (3, 4) at processed count 126 out of 512
+Found term (3, 4) at processed count 127 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (3, 4) at processed count 177 out of 512
+Found term (3, 4) at processed count 178 out of 512
+Found term (3, 4) at processed count 179 out of 512
+Found term (3, 4) at processed count 180 out of 512
+Found term (3, 4) at processed count 181 out of 512
+Found term (3, 4) at processed count 182 out of 512
+Found term (3, 4) at processed count 183 out of 512
+Found term (3, 4) at processed count 185 out of 512
+Found term (3, 4) at processed count 186 out of 512
+Found term (3, 4) at processed count 187 out of 512
+Found term (3, 4) at processed count 188 out of 512
+Found term (3, 4) at processed count 189 out of 512
+Found term (3, 4) at processed count 190 out of 512
+Timeout reached after processing 191 out of 512 inputs.
+Reconstructed DNF: (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 91.80% (470/512)
+
+Using explainer: TreeSHAP
+Found term (6, 7, 8) at processed count 8 out of 512
+Found term (6, 7, 8) at processed count 16 out of 512
+Found term (6, 7, 8) at processed count 24 out of 512
+Found term (6, 7, 8) at processed count 32 out of 512
+Found term (6, 7, 8) at processed count 40 out of 512
+Found term (6, 7, 8) at processed count 48 out of 512
+Found term (3, 4) at processed count 49 out of 512
+Found term (3, 4) at processed count 50 out of 512
+Found term (3, 4) at processed count 51 out of 512
+Found term (3, 4) at processed count 52 out of 512
+Found term (3, 4) at processed count 53 out of 512
+Found term (3, 4) at processed count 54 out of 512
+Found term (3, 4) at processed count 55 out of 512
+Found term (3, 4) at processed count 56 out of 512
+Found term (3, 4) at processed count 57 out of 512
+Found term (3, 4) at processed count 58 out of 512
+Found term (3, 4) at processed count 59 out of 512
+Found term (3, 4) at processed count 60 out of 512
+Found term (3, 4) at processed count 61 out of 512
+Found term (3, 4) at processed count 62 out of 512
+Found term (3, 4) at processed count 63 out of 512
+Found term (3, 4) at processed count 64 out of 512
+Found term (6, 7, 8) at processed count 72 out of 512
+Found term (6, 7, 8) at processed count 80 out of 512
+Found term (6, 7, 8) at processed count 88 out of 512
+Found term (6, 7, 8) at processed count 96 out of 512
+Found term (6, 7, 8) at processed count 104 out of 512
+Found term (6, 7, 8) at processed count 112 out of 512
+Found term (3, 4) at processed count 113 out of 512
+Found term (3, 4) at processed count 114 out of 512
+Found term (3, 4) at processed count 115 out of 512
+Found term (3, 4) at processed count 116 out of 512
+Found term (3, 4) at processed count 117 out of 512
+Found term (3, 4) at processed count 118 out of 512
+Found term (3, 4) at processed count 119 out of 512
+Found term (3, 4) at processed count 120 out of 512
+Found term (3, 4) at processed count 121 out of 512
+Found term (3, 4) at processed count 122 out of 512
+Found term (3, 4) at processed count 123 out of 512
+Found term (3, 4) at processed count 124 out of 512
+Found term (3, 4) at processed count 125 out of 512
+Found term (3, 4) at processed count 126 out of 512
+Found term (3, 4) at processed count 127 out of 512
+Found term (3, 4) at processed count 128 out of 512
+Found term (6, 7, 8) at processed count 136 out of 512
+Found term (6, 7, 8) at processed count 144 out of 512
+Found term (6, 7, 8) at processed count 152 out of 512
+Found term (6, 7, 8) at processed count 160 out of 512
+Found term (6, 7, 8) at processed count 168 out of 512
+Found term (6, 7, 8) at processed count 176 out of 512
+Found term (3, 4) at processed count 177 out of 512
+Found term (3, 4) at processed count 178 out of 512
+Found term (3, 4) at processed count 179 out of 512
+Found term (3, 4) at processed count 180 out of 512
+Found term (3, 4) at processed count 181 out of 512
+Found term (3, 4) at processed count 182 out of 512
+Found term (3, 4) at processed count 183 out of 512
+Found term (3, 4) at processed count 184 out of 512
+Found term (3, 4) at processed count 185 out of 512
+Found term (3, 4) at processed count 186 out of 512
+Found term (3, 4) at processed count 187 out of 512
+Found term (3, 4) at processed count 188 out of 512
+Found term (3, 4) at processed count 189 out of 512
+Found term (3, 4) at processed count 190 out of 512
+Found term (3, 4) at processed count 191 out of 512
+Found term (3, 4) at processed count 192 out of 512
+Found term (6, 7, 8) at processed count 200 out of 512
+Found term (6, 7, 8) at processed count 208 out of 512
+Found term (6, 7, 8) at processed count 216 out of 512
+Found term (6, 7, 8) at processed count 224 out of 512
+Found term (6, 7, 8) at processed count 232 out of 512
+Found term (6, 7, 8) at processed count 240 out of 512
+Found term (3, 4) at processed count 241 out of 512
+Found term (3, 4) at processed count 242 out of 512
+Found term (3, 4) at processed count 243 out of 512
+Found term (3, 4) at processed count 244 out of 512
+Found term (3, 4) at processed count 245 out of 512
+Found term (3, 4) at processed count 246 out of 512
+Found term (3, 4) at processed count 247 out of 512
+Found term (3, 4) at processed count 248 out of 512
+Found term (3, 4) at processed count 249 out of 512
+Found term (3, 4) at processed count 250 out of 512
+Found term (3, 4) at processed count 251 out of 512
+Found term (3, 4) at processed count 252 out of 512
+Found term (3, 4) at processed count 253 out of 512
+Found term (3, 4) at processed count 254 out of 512
+Found term (3, 4) at processed count 255 out of 512
+Found term (3, 4) at processed count 256 out of 512
+Found term (6, 7, 8) at processed count 264 out of 512
+Found term (6, 7, 8) at processed count 272 out of 512
+Found term (6, 7, 8) at processed count 280 out of 512
+Found term (6, 7, 8) at processed count 288 out of 512
+Found term (6, 7, 8) at processed count 296 out of 512
+Found term (6, 7, 8) at processed count 304 out of 512
+Found term (3, 4) at processed count 305 out of 512
+Found term (3, 4) at processed count 306 out of 512
+Found term (3, 4) at processed count 307 out of 512
+Found term (3, 4) at processed count 308 out of 512
+Found term (3, 4) at processed count 309 out of 512
+Found term (3, 4) at processed count 310 out of 512
+Found term (3, 4) at processed count 311 out of 512
+Found term (3, 4) at processed count 312 out of 512
+Found term (3, 4) at processed count 313 out of 512
+Found term (3, 4) at processed count 314 out of 512
+Found term (3, 4) at processed count 315 out of 512
+Found term (3, 4) at processed count 316 out of 512
+Found term (3, 4) at processed count 317 out of 512
+Found term (3, 4) at processed count 318 out of 512
+Found term (3, 4) at processed count 319 out of 512
+Found term (3, 4) at processed count 320 out of 512
+Found term (6, 7, 8) at processed count 328 out of 512
+Found term (6, 7, 8) at processed count 336 out of 512
+Found term (6, 7, 8) at processed count 344 out of 512
+Found term (6, 7, 8) at processed count 352 out of 512
+Found term (6, 7, 8) at processed count 360 out of 512
+Found term (6, 7, 8) at processed count 368 out of 512
+Found term (3, 4) at processed count 369 out of 512
+Found term (3, 4) at processed count 370 out of 512
+Found term (3, 4) at processed count 371 out of 512
+Found term (3, 4) at processed count 372 out of 512
+Found term (3, 4) at processed count 373 out of 512
+Found term (3, 4) at processed count 374 out of 512
+Found term (3, 4) at processed count 375 out of 512
+Found term (3, 4) at processed count 376 out of 512
+Found term (3, 4) at processed count 377 out of 512
+Found term (3, 4) at processed count 378 out of 512
+Found term (3, 4) at processed count 379 out of 512
+Found term (3, 4) at processed count 380 out of 512
+Found term (3, 4) at processed count 381 out of 512
+Found term (3, 4) at processed count 382 out of 512
+Found term (3, 4) at processed count 383 out of 512
+Found term (3, 4) at processed count 384 out of 512
+Found term (6, 7, 8) at processed count 392 out of 512
+Found term (6, 7, 8) at processed count 400 out of 512
+Found term (6, 7, 8) at processed count 408 out of 512
+Found term (6, 7, 8) at processed count 416 out of 512
+Found term (6, 7, 8) at processed count 424 out of 512
+Found term (6, 7, 8) at processed count 432 out of 512
+Found term (3, 4) at processed count 433 out of 512
+Found term (3, 4) at processed count 434 out of 512
+Found term (3, 4) at processed count 435 out of 512
+Found term (3, 4) at processed count 436 out of 512
+Found term (3, 4) at processed count 437 out of 512
+Found term (3, 4) at processed count 438 out of 512
+Found term (3, 4) at processed count 439 out of 512
+Found term (3, 4) at processed count 440 out of 512
+Found term (3, 4) at processed count 441 out of 512
+Found term (3, 4) at processed count 442 out of 512
+Found term (3, 4) at processed count 443 out of 512
+Found term (3, 4) at processed count 444 out of 512
+Found term (3, 4) at processed count 445 out of 512
+Found term (3, 4) at processed count 446 out of 512
+Found term (3, 4) at processed count 447 out of 512
+Found term (3, 4) at processed count 448 out of 512
+Found term (0, 1, 2) at processed count 449 out of 512
+Found term (0, 1, 2) at processed count 450 out of 512
+Found term (0, 1, 2) at processed count 451 out of 512
+Found term (0, 1, 2) at processed count 452 out of 512
+Found term (0, 1, 2) at processed count 453 out of 512
+Found term (0, 1, 2) at processed count 454 out of 512
+Found term (6, 7, 8) at processed count 456 out of 512
+Found term (0, 1, 2) at processed count 457 out of 512
+Found term (0, 1, 2) at processed count 458 out of 512
+Found term (0, 1, 2) at processed count 459 out of 512
+Found term (0, 1, 2) at processed count 460 out of 512
+Found term (0, 1, 2) at processed count 461 out of 512
+Found term (0, 1, 2) at processed count 462 out of 512
+Found term (6, 7, 8) at processed count 464 out of 512
+Found term (0, 1, 2) at processed count 465 out of 512
+Found term (0, 1, 2) at processed count 466 out of 512
+Found term (0, 1, 2) at processed count 467 out of 512
+Found term (0, 1, 2) at processed count 468 out of 512
+Found term (0, 1, 2) at processed count 469 out of 512
+Found term (0, 1, 2) at processed count 470 out of 512
+Found term (6, 7, 8) at processed count 472 out of 512
+Found term (0, 1, 2) at processed count 473 out of 512
+Found term (0, 1, 2) at processed count 474 out of 512
+Found term (0, 1, 2) at processed count 475 out of 512
+Found term (0, 1, 2) at processed count 476 out of 512
+Found term (0, 1, 2) at processed count 477 out of 512
+Found term (0, 1, 2) at processed count 478 out of 512
+Found term (6, 7, 8) at processed count 480 out of 512
+Found term (0, 1, 2) at processed count 481 out of 512
+Found term (0, 1, 2) at processed count 482 out of 512
+Found term (0, 1, 2) at processed count 485 out of 512
+Found term (0, 1, 2) at processed count 486 out of 512
+Found term (6, 7, 8) at processed count 488 out of 512
+Found term (0, 1, 2) at processed count 489 out of 512
+Found term (0, 1, 2) at processed count 490 out of 512
+Found term (0, 1, 2) at processed count 493 out of 512
+Found term (0, 1, 2) at processed count 494 out of 512
+Found term (6, 7, 8) at processed count 496 out of 512
+Found term (3, 4) at processed count 497 out of 512
+Found term (3, 4) at processed count 498 out of 512
+Found term (3, 4) at processed count 499 out of 512
+Found term (3, 4) at processed count 500 out of 512
+Found term (3, 4) at processed count 501 out of 512
+Found term (3, 4) at processed count 502 out of 512
+Found term (3, 4) at processed count 503 out of 512
+Found term (3, 4) at processed count 504 out of 512
+Found term (3, 4) at processed count 505 out of 512
+Found term (3, 4) at processed count 506 out of 512
+Found term (3, 4) at processed count 507 out of 512
+Found term (3, 4) at processed count 508 out of 512
+Found term (3, 4) at processed count 509 out of 512
+Found term (3, 4) at processed count 510 out of 512
+Found term (3, 4) at processed count 511 out of 512
+Found term (3, 4) at processed count 512 out of 512
+Reconstructed DNF: (x_1 ∧ x_2 ∧ x_3) ∨ (x_4 ∧ x_5) ∨ (x_7 ∧ x_8 ∧ x_9)
+Reconstruction accuracy: 100.00% (512/512)
+
+Model: CNN
+
+Using explainer: LIME
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: KernelSHAP
+Timeout reached after processing 94 out of 512 inputs.
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Using explainer: IntegratedGradients
+Reconstructed DNF: False
+Reconstruction accuracy: 57.42% (294/512)
+
+Ranking of explainers (Approach 3):
+1. Decision Tree-TreeSHAP: 100.00% (Processed 512/512)
+2. Decision Tree-LIME: 97.66% (Processed 512/512)
+3. Decision Tree-KernelSHAP: 91.80% (Processed 191/512)
+4. FCN-LIME: 68.36% (Processed 512/512)
+5. FCN-IntegratedGradients: 68.36% (Processed 512/512)
+6. FCN-KernelSHAP: 63.28% (Processed 263/512)
+7. CNN-LIME: 57.42% (Processed 512/512)
+8. CNN-KernelSHAP: 57.42% (Processed 94/512)
+9. CNN-IntegratedGradients: 57.42% (Processed 512/512)
+
+Final aggregated results:
+Simple_DNF_selective: {'FCN-LIME': True, 'FCN-KernelSHAP': True, 'FCN-IntegratedGradients': True, 'Decision Tree-LIME': True, 'Decision Tree-KernelSHAP': True, 'Decision Tree-TreeSHAP': True, 'CNN-LIME': False, 'CNN-KernelSHAP': False, 'CNN-IntegratedGradients': False}
+Example_DNF_selective: {'FCN-LIME': False, 'FCN-KernelSHAP': False, 'FCN-IntegratedGradients': False, 'Decision Tree-LIME': True, 'Decision Tree-KernelSHAP': True, 'Decision Tree-TreeSHAP': True, 'CNN-LIME': False, 'CNN-KernelSHAP': False, 'CNN-IntegratedGradients': False}
+Complex_DNF_selective: {'FCN-LIME': False, 'FCN-KernelSHAP': False, 'FCN-IntegratedGradients': False, 'Decision Tree-LIME': True, 'Decision Tree-KernelSHAP': True, 'Decision Tree-TreeSHAP': True, 'CNN-LIME': False, 'CNN-KernelSHAP': False, 'CNN-IntegratedGradients': False}
+Simple_DNF_approach2: {'FCN-LIME': 1.0, 'FCN-KernelSHAP': 1.0, 'FCN-IntegratedGradients': 1.0, 'Decision Tree-LIME': 1.0, 'Decision Tree-KernelSHAP': 1.0, 'Decision Tree-TreeSHAP': 1.0, 'CNN-LIME': 0.5625, 'CNN-KernelSHAP': 0.5625, 'CNN-IntegratedGradients': 0.5625}
+Example_DNF_approach2: {'FCN-LIME': 0.84765625, 'FCN-KernelSHAP': 0.84765625, 'FCN-IntegratedGradients': 0.84765625, 'Decision Tree-LIME': 1.0, 'Decision Tree-KernelSHAP': 1.0, 'Decision Tree-TreeSHAP': 1.0, 'CNN-LIME': 0.57421875, 'CNN-KernelSHAP': 0.57421875, 'CNN-IntegratedGradients': 0.57421875}
+Complex_DNF_approach2: {'FCN-LIME': 0.68359375, 'FCN-KernelSHAP': 0.68359375, 'FCN-IntegratedGradients': 0.68359375, 'Decision Tree-LIME': 1.0, 'Decision Tree-KernelSHAP': 1.0, 'Decision Tree-TreeSHAP': 1.0, 'CNN-LIME': 0.57421875, 'CNN-KernelSHAP': 0.57421875, 'CNN-IntegratedGradients': 0.57421875}
+Simple_DNF_approach3: {'FCN-LIME': (1.0, 512, 512), 'FCN-KernelSHAP': (0.8125, 254, 512), 'FCN-IntegratedGradients': (1.0, 512, 512), 'Decision Tree-LIME': (1.0, 512, 512), 'Decision Tree-KernelSHAP': (0.8125, 189, 512), 'Decision Tree-TreeSHAP': (1.0, 512, 512), 'CNN-LIME': (0.5625, 512, 512), 'CNN-KernelSHAP': (0.5625, 91, 512), 'CNN-IntegratedGradients': (0.5625, 512, 512)}
+Example_DNF_approach3: {'FCN-LIME': (0.84765625, 512, 512), 'FCN-KernelSHAP': (0.66015625, 259, 512), 'FCN-IntegratedGradients': (0.84765625, 512, 512), 'Decision Tree-LIME': (0.9765625, 512, 512), 'Decision Tree-KernelSHAP': (0.80078125, 190, 512), 'Decision Tree-TreeSHAP': (1.0, 512, 512), 'CNN-LIME': (0.57421875, 512, 512), 'CNN-KernelSHAP': (0.57421875, 89, 512), 'CNN-IntegratedGradients': (0.57421875, 512, 512)}
+Complex_DNF_approach3: {'FCN-LIME': (0.68359375, 512, 512), 'FCN-KernelSHAP': (0.6328125, 263, 512), 'FCN-IntegratedGradients': (0.68359375, 512, 512), 'Decision Tree-LIME': (0.9765625, 512, 512), 'Decision Tree-KernelSHAP': (0.91796875, 191, 512), 'Decision Tree-TreeSHAP': (1.0, 512, 512), 'CNN-LIME': (0.57421875, 512, 512), 'CNN-KernelSHAP': (0.57421875, 94, 512), 'CNN-IntegratedGradients': (0.57421875, 512, 512)}
