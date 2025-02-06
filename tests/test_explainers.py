@@ -3,7 +3,7 @@ import numpy as np
 from boolean_functions import dnf_example
 from data import generate_data
 from models import FCN, train_model
-from explainers import LIMEExplainer
+from explainers.lime_explainer import LIMEExplainer
 
 def test_dnf_example():
     # Check that a simple input yields the expected output.
