@@ -1,8 +1,0 @@
-version: '3.8'
-
-services:
-  explainability:
-    build: .
-    volumes:
-      - ${PWD}/artifacts:/app/artifacts
-    command: ["python", "run_tests.py", "--approach", "all"]

@@ -1,3 +1,0 @@
-Reconstructed DNF: (x_1 ∧ x_2)
-Found terms: {(0, 1)}
-Term metrics: {'precision': 0.0, 'recall': 0.0, 'f1': 0}

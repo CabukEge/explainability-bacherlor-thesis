@@ -1,4 +1,0 @@
-Reconstructed DNF: (x_4 ∧ x_5 ∧ x_6) ∨ (x_4 ∧ x_5 ∧ x_7 ∧ x_9) ∨ (x_7 ∧ x_8 ∧ x_9)
-Found terms: {(3, 4, 5), (3, 4, 6, 8), (6, 7, 8)}
-Accuracy Score: 0.80078125
-Processed 190 out of 512 inputs.

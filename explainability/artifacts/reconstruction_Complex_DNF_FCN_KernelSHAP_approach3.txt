@@ -1,4 +1,0 @@
-Reconstructed DNF: (x_5 ∧ x_6)
-Found terms: {(4, 5)}
-Accuracy Score: 0.6328125
-Processed 263 out of 512 inputs.
