@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest
+
+      - name: Run unit tests
+        run: pytest
+
+      - name: Run reconstruction tests (all approaches)
+        run: python run_tests.py --approach all
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: reconstruction-matrices
+          path: artifacts/
+        
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t explainability .
+
+      - name: Run tests inside Docker
+        run: docker run --rm explainability python run_tests.py --approach all
