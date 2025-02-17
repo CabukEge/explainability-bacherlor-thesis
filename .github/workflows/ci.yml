@@ -54,7 +54,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/explainability:latest
+          tags: ghcr.io/${{ github.repository.toLowerCase() }}/explainability:latest
 
       - name: Run tests inside Docker
-        run: docker run --rm ghcr.io/${{ github.repository }}/explainability:latest python run_tests.py --approach all
+        run: docker run --rm ghcr.io/${{ github.repository.toLowerCase() }}/explainability:latest python run_tests.py --approach all
