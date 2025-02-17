@@ -194,19 +194,14 @@ def selective_approach_test(boolean_func, func_name):
 # ================================
 def approach2_test(boolean_func, func_name, num_samples=50):
     logger.info(f"\n=== Approach 2: Reconstruction with {num_samples} random samples for {func_name} ===")
-
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
-
     models = {
         'FCN': FCN(),
         'Decision Tree': train_tree(X_train, y_train),
         'CNN': CNN()
     }
-
-    # For non–Decision Tree models, either load or train
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
-
     for name in ['FCN', 'CNN']:
         model = models[name]
         weight_path = os.path.join(weights_dir, f"{name}.pt")
@@ -233,7 +228,6 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         if model_name == 'Decision Tree':
             explainers['TreeSHAP'] = TreeSHAPExplainer(model)
 
-        # Use random samples from the 512 possible inputs
         all_inputs = list(product([0, 1], repeat=9))
         samples = [np.array(random.choice(all_inputs)) for _ in range(num_samples)]
 
@@ -242,8 +236,8 @@ def approach2_test(boolean_func, func_name, num_samples=50):
             found_terms = set()
             for idx, sample in enumerate(samples):
                 explanation = explainer.explain(sample)
-                # Log explanation summary if debug is enabled.
-                if DEBUG_EXPLANATION:
+                # Only log summary for the first sample if debug is enabled.
+                if DEBUG_EXPLANATION and idx == 0:
                     log_explanation_summary(explanation)
                 if 'coefficients' in explanation:
                     coefficients = explanation['coefficients']

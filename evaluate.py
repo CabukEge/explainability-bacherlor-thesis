@@ -139,7 +139,7 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
     """
     Reconstruct DNF using a specific explainer.
     We now also handle the 'shap_values' from IntegratedGradientsExplainer.
-    If debug is True, print summary statistics for explanation values.
+    If debug is True, prints summary statistics for explanation values (only for the first test case).
     """
     terms = set()
     
@@ -151,21 +151,22 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
         test_cases.append(test_case)
 
     print(f"\nAnalyzing terms with {explainer.__class__.__name__}:")
+    printed_summary = False  # Only print summary once
     for test_case in test_cases:
         explanation = explainer.explain(test_case)
 
-        # If debug is enabled, print summary statistics for explanation values.
-        if debug:
+        # If debug is enabled, print summary statistics for explanation values only once.
+        if debug and not printed_summary:
             if 'coefficients' in explanation:
                 coeffs = explanation['coefficients']
                 print(f"Coefficients summary: min={min(coeffs):.4f}, max={max(coeffs):.4f}, mean={np.mean(coeffs):.4f}")
             elif 'shap_values' in explanation:
                 shap_vals = explanation['shap_values']
                 print(f"SHAP values summary: min={np.min(shap_vals):.4f}, max={np.max(shap_vals):.4f}, mean={np.mean(shap_vals):.4f}")
+            printed_summary = True
         
         # Check if it has 'coefficients' (LIME) or 'shap_values' (KernelSHAP/IntegratedGradients)
         if hasattr(explainer, 'num_samples'):
-            # It's LIME or KernelSHAP
             if 'coefficients' in explanation:  # LIME
                 coefficients = explanation['coefficients']
                 significant_vars = tuple(sorted(
@@ -179,7 +180,6 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
                     if val > 0.1 and test_case[i] == 1
                 ))
         elif hasattr(explainer, 'model') and isinstance(explainer, TreeSHAPExplainer):
-            # TreeSHAP
             shap_values = explanation['shap_values']
             significant_vars = tuple(sorted(
                 i for i, val in enumerate(shap_values)
