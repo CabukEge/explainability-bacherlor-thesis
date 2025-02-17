@@ -75,6 +75,20 @@ DEBUG_EXPLANATION = False
 ##############################
 # Helper functions
 ##############################
+def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
+    """
+    Attempts to load model weights from a given path.
+    If successful, returns True; otherwise returns False.
+    """
+    if os.path.exists(weight_path):
+        state = torch.load(weight_path, map_location="cpu")
+        model.load_state_dict(state)
+        logger.info(f"Loaded weights from {weight_path}")
+        return True
+    else:
+        logger.info(f"No weight file found at {weight_path}. Will train from scratch.")
+        return False
+
 def get_prediction(model, sample):
     """Return the predicted probability (for class 1) of a given input sample."""
     from sklearn.tree import DecisionTreeClassifier
@@ -165,14 +179,14 @@ def selective_approach_test(boolean_func, func_name):
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
 
-    # For Approach 1, use the known test cases (the ones corresponding to the known DNF terms)
+    # Parse the known DNF into its constituent terms.
     known_terms = parse_dnf_to_terms(target_dnf)
     samples = [create_test_case_for_term(term) for term in known_terms]
     total_terms = len(known_terms)
     results = {}
     explainer_metrics = {}
     
-    # Optionally aggregate explanation stats on these known cases
+    # Optionally, you can aggregate explanation stats over these known cases.
     agg_stats = {}
     
     for model_name, model in models.items():
@@ -192,7 +206,6 @@ def selective_approach_test(boolean_func, func_name):
             reconstructed_dnf = " ∨ ".join(sorted(dnf_terms))
         logger.info(f"Reconstructed DNF (from model {model_name}): {reconstructed_dnf}")
         
-        # Aggregate explanation stats for known samples for this model and each explainer.
         explainer_list = ['LIME', 'KernelSHAP']
         if hasattr(model, 'parameters'):
             explainer_list.append('IntegratedGradients')
@@ -208,11 +221,10 @@ def selective_approach_test(boolean_func, func_name):
                 explainer = IntegratedGradientsExplainer(model)
             elif explainer_name == 'TreeSHAP':
                 explainer = TreeSHAPExplainer(model)
-            # Aggregate explanation statistics over the known samples.
+            # Aggregate explanation stats for known samples.
             stats = aggregate_explanation_stats(model, samples, explainer)
             agg_stats.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
-            
             correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
             term_metrics = compute_term_metrics(found_terms, set(known_terms))
             results[f"{model_name}-{explainer_name}"] = correct
@@ -233,9 +245,9 @@ def selective_approach_test(boolean_func, func_name):
                 f.write(f"Term metrics: {term_metrics}\n")
     return results, explainer_metrics
 
-# ================================
+##############################
 # Approach 2: Random Sampling (50 samples)
-# ================================
+##############################
 def approach2_test(boolean_func, func_name, num_samples=50):
     logger.info(f"\n=== Approach 2: Reconstruction with {num_samples} random samples for {func_name} ===")
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
@@ -277,7 +289,7 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         samples = [np.array(random.choice(all_inputs)) for _ in range(num_samples)]
         for explainer_name, explainer in explainers.items():
             logger.info(f"\nUsing explainer: {explainer_name}")
-            # Aggregate explanation stats for these random samples.
+            # Aggregate explanation statistics.
             stats = aggregate_explanation_stats(model, samples, explainer)
             expl_summary.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
@@ -313,17 +325,17 @@ def approach2_test(boolean_func, func_name, num_samples=50):
     logger.info("\nAggregated Explanation Summary (Approach 2):")
     for model_name, expl_data in expl_summary.items():
         for expl_name, stats in expl_data.items():
-            logger.info(f"{model_name} - {expl_name} - True cases: mean(max)={stats['true_max_mean']}, mean(min)={stats['true_min_mean']}, count={len(stats['true_max_mean']) if stats['true_max_mean'] is not None else 0}")
-            logger.info(f"{model_name} - {expl_name} - False cases: mean(max)={stats['false_max_mean']}, count={len(stats['false_max_mean']) if stats['false_max_mean'] is not None else 0}")
+            logger.info(f"{model_name} - {expl_name} - True cases: mean(max)={stats['true_max_mean']}, mean(min)={stats['true_min_mean']}")
+            logger.info(f"{model_name} - {expl_name} - False cases: mean(max)={stats['false_max_mean']}")
     logger.info("\nRanking of explainers (Approach 2):")
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     for rank, (key, score) in enumerate(sorted_results, start=1):
         logger.info(f"{rank}. {key}: {score*100:.2f}%")
     return results
 
-# ================================
+##############################
 # Approach 3: Exhaustive (All 512 inputs)
-# ================================
+##############################
 def approach3_test(boolean_func, func_name, timeout_sec=30):
     logger.info(f"\n=== Approach 3: Full reconstruction over all inputs with timeout {timeout_sec}s for {func_name} ===")
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
@@ -344,9 +356,7 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
-
     results = {}
-
     class TimeoutException(Exception):
         pass
     def timeout_handler(signum, frame):
@@ -368,7 +378,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
             logger.info(f"\nUsing explainer: {explainer_name}")
             found_terms = set()
             processed = 0
-            # For aggregated stats in Approach 3, we use all inputs.
             agg_stats = []
             try:
                 signal.alarm(timeout_sec)
@@ -388,7 +397,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
                     else:
                         significant_vars = None
                         values = None
-                    # Accumulate aggregated stats from every sample.
                     if values is not None:
                         p = get_prediction(model, sample)
                         agg_stats.append({'prediction': p, 'max': np.max(values), 'min': np.min(values)})
@@ -412,7 +420,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
                 f.write(f"Found terms: {found_terms}\n")
                 f.write(f"Accuracy Score: {score}\n")
                 f.write(f"Processed {processed} out of {total_inputs} inputs.\n")
-            # Aggregate overall statistics for Approach 3 for this explainer.
             if agg_stats:
                 true_stats = [d for d in agg_stats if d['prediction'] >= 0.5]
                 false_stats = [d for d in agg_stats if d['prediction'] < 0.5]
@@ -428,9 +435,9 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
         logger.info(f"{rank}. {key}: {score*100:.2f}% (Processed {proc}/{total})")
     return results
 
-# ==========================================
+##############################
 # Helper to Evaluate Reconstructed DNF
-# ==========================================
+##############################
 def evaluate_reconstructed_dnf(dnf_expr, actual_func):
     terms = parse_dnf_to_terms(dnf_expr)
     def eval_dnf(x, terms):
@@ -449,9 +456,9 @@ def evaluate_reconstructed_dnf(dnf_expr, actual_func):
     logger.info(f"Reconstruction accuracy: {score*100:.2f}% ({correct}/{len(all_inputs)})")
     return score
 
-# ==========================================
+##############################
 # Main entry point
-# ==========================================
+##############################
 def main():
     parser = argparse.ArgumentParser(
         description="Run reconstruction tests for explainers with different approaches."
@@ -482,5 +489,6 @@ def main():
             all_results[f"{name}_approach3"] = res
     logger.info("\nFinal aggregated results:")
     logger.info(pformat(all_results, indent=4))
+    
 if __name__ == "__main__":
     main()
