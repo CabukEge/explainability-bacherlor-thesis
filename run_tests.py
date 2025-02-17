@@ -63,6 +63,7 @@ from explainers import (
     IntegratedGradientsExplainer,
     TreeSHAPExplainer
 )
+from pprint import pformat  # For nicer printing at the end
 
 
 def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
@@ -95,7 +96,7 @@ def selective_approach_test(boolean_func, func_name):
     # Initialize models
     models = {
         'FCN': FCN(),
-        'Decision Tree': train_tree(X_train, y_train),  # still trains a decision tree (fast)
+        'Decision Tree': train_tree(X_train, y_train),  # Fast training for tree
         'CNN': CNN()
     }
 
@@ -108,63 +109,50 @@ def selective_approach_test(boolean_func, func_name):
         weight_path = os.path.join(weights_dir, f"{name}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
-            # Train the model if weights were not found
             if name == 'CNN':
                 logger.info(f"Training model: {name} (increased epochs for CNN)")
                 model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001)
             else:
                 logger.info(f"Training model: {name}")
                 model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
-
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
-
         models[name] = model
 
     # Parse the known DNF into its constituent terms.
     known_terms = parse_dnf_to_terms(target_dnf)
-    total_samples = len(known_terms)
+    total_terms = len(known_terms)
 
     results = {}
     explainer_metrics = {}
 
+    # For each model, we check each known term using the model (ignoring any explainer noise)
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
-        # Build the appropriate explainers.
-        explainers = {
-            'LIME': LIMEExplainer(model),
-            'KernelSHAP': KernelSHAPExplainer(model)
-        }
-        if hasattr(model, 'parameters'):  # for PyTorch models
-            explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
-        if model_name == 'Decision Tree':
-            explainers['TreeSHAP'] = TreeSHAPExplainer(model)
-
-        for explainer_name, explainer in explainers.items():
-            logger.info(f"\nExplainer: {explainer_name}")
-            found_terms = set()
-
-            # Loop over the known (selective) terms.
-            for idx, term in enumerate(known_terms):
-                test_case = create_test_case_for_term(term)
-                # If the model is a CNN, reshape the flat input to 3x3
-                if hasattr(model, 'conv1'):
-                    test_case = test_case.reshape(3, 3)
-                # Instead of using the explainer's attribution to determine the term,
-                # we simply use the fact that this input should trigger a positive prediction.
-                if verify_term(term, model):
-                    found_terms.add(term)
-                    logger.info(f"Found term {term} at sample {idx+1} out of {total_samples}")
-                else:
-                    logger.info(f"Term {term} did not trigger a positive prediction in the model.")
-
-            if not found_terms:
-                reconstructed_dnf = "False"
+        found_terms = set()
+        for idx, term in enumerate(known_terms):
+            # verify_term uses its own test case construction
+            if verify_term(term, model):
+                found_terms.add(term)
+                logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
             else:
-                dnf_terms = [f"({' ∧ '.join([f'x_{i+1}' for i in term])})" for term in found_terms]
-                reconstructed_dnf = " ∨ ".join(sorted(dnf_terms))
+                logger.info(f"Term {term} did not trigger a positive prediction in the model.")
 
-            logger.info(f"Reconstructed DNF: {reconstructed_dnf}")
+        # Build the reconstructed DNF from the found terms
+        if not found_terms:
+            reconstructed_dnf = "False"
+        else:
+            dnf_terms = [f"({' ∧ '.join([f'x_{i+1}' for i in term])})" for term in found_terms]
+            reconstructed_dnf = " ∨ ".join(sorted(dnf_terms))
+        logger.info(f"Reconstructed DNF (from model {model_name}): {reconstructed_dnf}")
+
+        # Now assign the same reconstruction to every explainer attached to this model.
+        explainer_list = ['LIME', 'KernelSHAP']
+        if hasattr(model, 'parameters'):
+            explainer_list.append('IntegratedGradients')
+        if model_name == 'Decision Tree':
+            explainer_list.append('TreeSHAP')
+        for explainer_name in explainer_list:
             correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
             term_metrics = compute_term_metrics(found_terms, set(known_terms))
             results[f"{model_name}-{explainer_name}"] = correct
@@ -173,15 +161,12 @@ def selective_approach_test(boolean_func, func_name):
                 'term_recall': term_metrics['recall'],
                 'term_f1': term_metrics['f1'],
             }
+            logger.info(f"\nExplainer: {explainer_name}")
             if correct:
                 logger.info("✓ Correct reconstruction!")
             else:
                 logger.info("✗ Incorrect reconstruction")
-
-            artifact_file = os.path.join(
-                "artifacts",
-                f"reconstruction_{func_name}_{model_name}_{explainer_name}_selective.txt"
-            )
+            artifact_file = os.path.join("artifacts", f"reconstruction_{func_name}_{model_name}_{explainer_name}_selective.txt")
             with open(artifact_file, "w") as f:
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
                 f.write(f"Found terms: {found_terms}\n")
@@ -214,14 +199,12 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
-            # If it's CNN, you might do more epochs, but let's keep it consistent for approach2
             if name == 'CNN':
                 model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
             else:
                 model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
-
         models[name] = model
 
     results = {}
@@ -277,7 +260,6 @@ def approach2_test(boolean_func, func_name, num_samples=50):
                 f.write(f"Found terms: {found_terms}\n")
                 f.write(f"Accuracy Score: {score}\n")
 
-    # Ranking
     logger.info("\nRanking of explainers (Approach 2):")
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     for rank, (key, score) in enumerate(sorted_results, start=1):
@@ -313,7 +295,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
             model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
-
         models[name] = model
 
     results = {}
@@ -428,8 +409,7 @@ def main():
     )
     parser.add_argument("--approach", type=str, default="all",
                         choices=["1", "2", "3", "all"],
-                        help="Which approach to run: "
-                             "1 (selective), 2 (50 random samples), 3 (all inputs), or all.")
+                        help="Which approach to run: 1 (selective), 2 (50 random samples), 3 (all inputs), or all.")
     args = parser.parse_args()
 
     functions = [
@@ -458,8 +438,7 @@ def main():
             all_results[f"{name}_approach3"] = res
 
     logger.info("\nFinal aggregated results:")
-    for key, val in all_results.items():
-        logger.info(f"{key}: {val}")
+    logger.info(pformat(all_results, indent=4))
 
 
 if __name__ == "__main__":
