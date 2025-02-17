@@ -65,7 +65,6 @@ from explainers import (
 )
 from pprint import pformat  # For nicer printing at the end
 
-
 def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
     """
     Attempts to load model weights from a given path.
@@ -79,7 +78,6 @@ def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
     else:
         logger.info(f"No weight file found at {weight_path}. Will train from scratch.")
         return False
-
 
 # ================================
 # Approach 1: Selective (Known DNF)
@@ -134,7 +132,8 @@ def selective_approach_test(boolean_func, func_name):
         for idx, term in enumerate(known_terms):
             # Use a lower threshold for neural networks to account for slight uncertainty.
             threshold_val = 0.4 if hasattr(model, 'parameters') else 0.5
-            if verify_term(term, model, threshold=threshold_val):
+            # Log the predicted probability for this test case by enabling log_pred.
+            if verify_term(term, model, threshold=threshold_val, log_pred=True):
                 found_terms.add(term)
                 logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
             else:
@@ -175,7 +174,6 @@ def selective_approach_test(boolean_func, func_name):
                 f.write(f"Term metrics: {term_metrics}\n")
 
     return results, explainer_metrics
-
 
 # ================================
 # Approach 2: Random Sampling (50 samples)
@@ -268,7 +266,6 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         logger.info(f"{rank}. {key}: {score*100:.2f}%")
 
     return results
-
 
 # ================================
 # Approach 3: Exhaustive (All 512 inputs)
@@ -377,7 +374,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
 
     return results
 
-
 # ==========================================
 # Helper to Evaluate Reconstructed DNF
 # ==========================================
@@ -400,7 +396,6 @@ def evaluate_reconstructed_dnf(dnf_expr, actual_func):
     score = correct / len(all_inputs)
     logger.info(f"Reconstruction accuracy: {score*100:.2f}% ({correct}/{len(all_inputs)})")
     return score
-
 
 # ==========================================
 # Main entry point
@@ -441,7 +436,6 @@ def main():
 
     logger.info("\nFinal aggregated results:")
     logger.info(pformat(all_results, indent=4))
-
 
 if __name__ == "__main__":
     main()
