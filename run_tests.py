@@ -51,6 +51,7 @@ from models import FCN, CNN, train_model, train_tree
 from evaluate import (
     parse_dnf_to_terms,
     get_function_str,
+    verify_term,
     verify_term_is_minimal,
     compute_term_metrics,
     are_dnfs_equivalent,
