@@ -59,6 +59,8 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ steps.repo_lower.outputs.repo }}/explainability:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run tests inside Docker
         run: docker run --rm ghcr.io/${{ steps.repo_lower.outputs.repo }}/explainability:latest python run_tests.py --approach all
