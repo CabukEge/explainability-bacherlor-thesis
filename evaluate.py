@@ -139,7 +139,7 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
     """
     Reconstruct DNF using a specific explainer.
     We now also handle the 'shap_values' from IntegratedGradientsExplainer.
-    If debug is True, prints summary statistics for explanation values (only for the first test case).
+    If debug is True, print summary statistics for explanation values (only for the first test case).
     """
     terms = set()
     
@@ -165,7 +165,7 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
                 print(f"SHAP values summary: min={np.min(shap_vals):.4f}, max={np.max(shap_vals):.4f}, mean={np.mean(shap_vals):.4f}")
             printed_summary = True
         
-        # Check if it has 'coefficients' (LIME) or 'shap_values' (KernelSHAP/IntegratedGradients)
+        # Check if explanation has 'coefficients' (LIME) or 'shap_values' (KernelSHAP/IntegratedGradients)
         if hasattr(explainer, 'num_samples'):
             if 'coefficients' in explanation:  # LIME
                 coefficients = explanation['coefficients']
@@ -201,7 +201,7 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
         
     dnf_terms = [f"({' ∧ '.join([f'x_{i+1}' for i in term])})" for term in terms]
     return " ∨ ".join(sorted(dnf_terms))
-
+    
 def evaluate(boolean_func, func_name=""):
     """
     Train models and evaluate explanations.
