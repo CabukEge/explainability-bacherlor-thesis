@@ -70,7 +70,7 @@ DEBUG_EXPLANATION = True
 
 def log_explanation_summary(explanation):
     """
-    Logs summary statistics (min, max, mean) for explanation values (coefficients or shap_values)
+    Logs summary statistics (min, max, mean) for explanation values (coefficients or SHAP values)
     """
     if 'coefficients' in explanation:
         coeffs = explanation['coefficients']
