@@ -19,21 +19,23 @@ from sympy import symbols
 from typing import List, Dict, Any, Set, Tuple
 import time
 
-# Set this flag to True to print extra debug info about explanation values.
-DEBUG = False
-
 def create_test_case_for_term(term: tuple, n: int = 9) -> np.ndarray:
     """Create a test case where specified variables are 1, others are 0"""
     x = np.zeros(n)
     x[list(term)] = 1
     return x
 
-def verify_term(term: tuple, model, threshold: float = 0.5) -> bool:
-    """Verify if a term is valid by checking model prediction"""
+def verify_term(term: tuple, model, threshold: float = 0.5, log_pred: bool = False) -> bool:
+    """
+    Verify if a term is valid by checking model prediction.
+    If log_pred is True, print the predicted probability for the test case.
+    """
     test_case = create_test_case_for_term(term)
     
     if isinstance(model, DecisionTreeClassifier):
         pred = model.predict_proba(test_case.reshape(1, -1))[0, 1]
+        if log_pred:
+            print(f"Term {term} predicted probability: {pred:.4f}")
         return pred > threshold
     
     if isinstance(model, torch.nn.Module):
@@ -45,6 +47,8 @@ def verify_term(term: tuple, model, threshold: float = 0.5) -> bool:
                 x_tensor = torch.FloatTensor(test_case).reshape(1, 3, 3)
             output = model(x_tensor)
             pred = torch.softmax(output, dim=1)[0, 1].item()
+            if log_pred:
+                print(f"Term {term} predicted probability: {pred:.4f}")
             return pred > threshold
     
     return False
@@ -134,8 +138,8 @@ def get_function_str(func) -> str:
 def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: List, debug: bool = False) -> str:
     """
     Reconstruct DNF using a specific explainer.
-    Also handles the 'shap_values' from IntegratedGradientsExplainer.
-    If debug is True, prints summary statistics for explanation values.
+    We now also handle the 'shap_values' from IntegratedGradientsExplainer.
+    If debug is True, print summary statistics for explanation values.
     """
     terms = set()
     
@@ -149,8 +153,8 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
     print(f"\nAnalyzing terms with {explainer.__class__.__name__}:")
     for test_case in test_cases:
         explanation = explainer.explain(test_case)
-        
-        # Optional debug: print summary stats of explanation values
+
+        # If debug is enabled, print summary statistics for explanation values.
         if debug:
             if 'coefficients' in explanation:
                 coeffs = explanation['coefficients']
@@ -159,7 +163,7 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
                 shap_vals = explanation['shap_values']
                 print(f"SHAP values summary: min={np.min(shap_vals):.4f}, max={np.max(shap_vals):.4f}, mean={np.mean(shap_vals):.4f}")
         
-        # Check if explanation has 'coefficients' (for LIME) or 'shap_values'
+        # Check if it has 'coefficients' (LIME) or 'shap_values' (KernelSHAP/IntegratedGradients)
         if hasattr(explainer, 'num_samples'):
             # It's LIME or KernelSHAP
             if 'coefficients' in explanation:  # LIME
@@ -169,7 +173,6 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
                     if coef > 0.1 and test_case[i] == 1
                 ))
             else:
-                # KernelSHAP uses 'shap_values'
                 shap_values = explanation['shap_values']
                 significant_vars = tuple(sorted(
                     i for i, val in enumerate(shap_values)
@@ -183,7 +186,6 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
                 if val > 0.1 and test_case[i] == 1
             ))
         else:
-            # IntegratedGradients or other
             shap_values = explanation['shap_values']
             significant_vars = tuple(sorted(
                 i for i, val in enumerate(shap_values)
