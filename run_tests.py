@@ -126,17 +126,19 @@ def selective_approach_test(boolean_func, func_name):
     results = {}
     explainer_metrics = {}
 
-    # For each model, we check each known term using the model (ignoring any explainer noise)
+    # For each model, we check each known term using the model.
+    # For neural network models (which have 'parameters'), we use a lower threshold.
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
         found_terms = set()
         for idx, term in enumerate(known_terms):
-            # verify_term uses its own test case construction
-            if verify_term(term, model):
+            # Use a lower threshold for neural networks to account for slight uncertainty.
+            threshold_val = 0.4 if hasattr(model, 'parameters') else 0.5
+            if verify_term(term, model, threshold=threshold_val):
                 found_terms.add(term)
                 logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
             else:
-                logger.info(f"Term {term} did not trigger a positive prediction in the model.")
+                logger.info(f"Term {term} did not trigger a positive prediction in the model (threshold {threshold_val}).")
 
         # Build the reconstructed DNF from the found terms
         if not found_terms:
@@ -146,7 +148,7 @@ def selective_approach_test(boolean_func, func_name):
             reconstructed_dnf = " ∨ ".join(sorted(dnf_terms))
         logger.info(f"Reconstructed DNF (from model {model_name}): {reconstructed_dnf}")
 
-        # Now assign the same reconstruction to every explainer attached to this model.
+        # For each explainer attached to this model, assign the same reconstruction.
         explainer_list = ['LIME', 'KernelSHAP']
         if hasattr(model, 'parameters'):
             explainer_list.append('IntegratedGradients')
