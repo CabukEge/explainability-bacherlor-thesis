@@ -13,12 +13,13 @@ Approach 2 (Random Sampling):
   - Additionally, it aggregates summary statistics of the explanation values:
       • For inputs that trigger "true" (prediction ≥ 0.5): records the highest and lowest explanation value.
       • For inputs that trigger "false": records the highest explanation value.
-      • After sampling, it logs the mean of these values so you can pick a good threshold.
-
+      • Then, it computes an adaptive threshold as (true_max_mean + false_max_mean)/2.
+      • This threshold is then used for extracting active features.
+      
 Approach 3 (Exhaustive):
   - Uses all 512 possible inputs.
+  - Aggregates explanation stats in the same manner and uses the adaptive threshold.
   - If a timeout is reached, it logs how many inputs were processed.
-  - (You can similarly aggregate explanation stats here if desired.)
 
 All outputs are logged both to the terminal and to a log file in artifacts/run_tests.log.
 Reconstruction matrices (the reconstructed DNF and metrics) are saved as artifacts.
@@ -69,7 +70,7 @@ from explainers import (
 )
 from pprint import pformat  # For nicer printing at the end
 
-# DEBUG_EXPLANATION flag: set to True to print extra debug info (if desired)
+# DEBUG flag: set to True for additional debugging info.
 DEBUG_EXPLANATION = False
 
 ##############################
@@ -90,7 +91,10 @@ def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
         return False
 
 def get_prediction(model, sample):
-    """Return the predicted probability (for class 1) of a given input sample."""
+    """Return the predicted probability (for class 1) of a given input sample.
+       Ensures sample is a numpy array."""
+    if isinstance(sample, tuple):
+        sample = np.array(sample)
     from sklearn.tree import DecisionTreeClassifier
     if isinstance(model, DecisionTreeClassifier):
         return model.predict_proba(sample.reshape(1, -1))[0, 1]
@@ -111,7 +115,7 @@ def aggregate_explanation_stats(model, samples, explainer):
     For a list of samples, aggregate explanation statistics:
       - For samples with prediction >= 0.5 ("true"): record max and min of explanation values.
       - For samples with prediction < 0.5 ("false"): record max.
-    Returns a dict with the mean true max, mean true min, and mean false max.
+    Returns a dict with keys: 'true_max_mean', 'true_min_mean', 'false_max_mean'.
     """
     true_max_vals = []
     true_min_vals = []
@@ -157,11 +161,10 @@ def selective_approach_test(boolean_func, func_name):
     # Initialize models
     models = {
         'FCN': FCN(),
-        'Decision Tree': train_tree(X_train, y_train),  # Fast training for tree
+        'Decision Tree': train_tree(X_train, y_train),
         'CNN': CNN()
     }
 
-    # For non–Decision Tree models, either load or train
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
     for name in ['FCN', 'CNN']:
@@ -179,14 +182,11 @@ def selective_approach_test(boolean_func, func_name):
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
 
-    # Parse the known DNF into its constituent terms.
     known_terms = parse_dnf_to_terms(target_dnf)
     samples = [create_test_case_for_term(term) for term in known_terms]
     total_terms = len(known_terms)
     results = {}
     explainer_metrics = {}
-    
-    # Optionally, you can aggregate explanation stats over these known cases.
     agg_stats = {}
     
     for model_name, model in models.items():
@@ -198,7 +198,7 @@ def selective_approach_test(boolean_func, func_name):
                 found_terms.add(term)
                 logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
             else:
-                logger.info(f"Term {term} did not trigger a positive prediction in the model (threshold {threshold_val}).")
+                logger.info(f"Term {term} did not trigger a positive prediction (threshold {threshold_val}).")
         if not found_terms:
             reconstructed_dnf = "False"
         else:
@@ -212,7 +212,6 @@ def selective_approach_test(boolean_func, func_name):
         if model_name == 'Decision Tree':
             explainer_list.append('TreeSHAP')
         for explainer_name in explainer_list:
-            explainer = None
             if explainer_name == 'LIME':
                 explainer = LIMEExplainer(model)
             elif explainer_name == 'KernelSHAP':
@@ -221,7 +220,7 @@ def selective_approach_test(boolean_func, func_name):
                 explainer = IntegratedGradientsExplainer(model)
             elif explainer_name == 'TreeSHAP':
                 explainer = TreeSHAPExplainer(model)
-            # Aggregate explanation stats for known samples.
+            # Aggregate explanation stats over the known samples.
             stats = aggregate_explanation_stats(model, samples, explainer)
             agg_stats.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
@@ -272,7 +271,6 @@ def approach2_test(boolean_func, func_name, num_samples=50):
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
 
-    # Prepare accumulators for aggregated explanation statistics.
     expl_summary = {}
     results = {}
     for model_name, model in models.items():
@@ -289,20 +287,26 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         samples = [np.array(random.choice(all_inputs)) for _ in range(num_samples)]
         for explainer_name, explainer in explainers.items():
             logger.info(f"\nUsing explainer: {explainer_name}")
-            # Aggregate explanation statistics.
+            # First, aggregate explanation stats over the random samples.
             stats = aggregate_explanation_stats(model, samples, explainer)
             expl_summary.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
+            # Compute adaptive threshold: if false_max_mean exists, threshold = (true_max_mean + false_max_mean)/2
+            if stats['false_max_mean'] is not None:
+                adaptive_threshold = (stats['true_max_mean'] + stats['false_max_mean']) / 2
+            else:
+                adaptive_threshold = 0.1
+            logger.info(f"Adaptive threshold for {explainer_name} on {model_name}: {adaptive_threshold:.4f}")
             found_terms = set()
             for idx, sample in enumerate(samples):
                 explanation = explainer.explain(sample)
                 if 'coefficients' in explanation:
                     significant_vars = tuple(sorted(
-                        i for i, coef in enumerate(explanation['coefficients']) if coef > 0.1 and sample[i] == 1
+                        i for i, coef in enumerate(explanation['coefficients']) if coef > adaptive_threshold and sample[i] == 1
                     ))
                 elif 'shap_values' in explanation:
                     significant_vars = tuple(sorted(
-                        i for i, val in enumerate(explanation['shap_values']) if val > 0.1 and sample[i] == 1
+                        i for i, val in enumerate(explanation['shap_values']) if val > adaptive_threshold and sample[i] == 1
                     ))
                 else:
                     significant_vars = None
@@ -383,7 +387,10 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
                 signal.alarm(timeout_sec)
                 for sample in all_inputs:
                     processed += 1
-                    explanation = explainer.explain(np.array(sample))
+                    # Ensure sample is a NumPy array
+                    if isinstance(sample, tuple):
+                        sample = np.array(sample)
+                    explanation = explainer.explain(sample)
                     if 'coefficients' in explanation:
                         values = np.array(explanation['coefficients'])
                         significant_vars = tuple(sorted(
