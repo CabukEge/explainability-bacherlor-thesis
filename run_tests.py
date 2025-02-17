@@ -65,6 +65,20 @@ from explainers import (
 )
 from pprint import pformat  # For nicer printing at the end
 
+# DEBUG_EXPLANATION flag: set to True to log summary stats for explanation values.
+DEBUG_EXPLANATION = True
+
+def log_explanation_summary(explanation):
+    """
+    Logs summary statistics (min, max, mean) for explanation values (coefficients or shap_values)
+    """
+    if 'coefficients' in explanation:
+        coeffs = explanation['coefficients']
+        logger.info(f"Coefficients summary: min={min(coeffs):.4f}, max={max(coeffs):.4f}, mean={np.mean(coeffs):.4f}")
+    elif 'shap_values' in explanation:
+        shap_vals = explanation['shap_values']
+        logger.info(f"SHAP values summary: min={np.min(shap_vals):.4f}, max={np.max(shap_vals):.4f}, mean={np.mean(shap_vals):.4f}")
+
 def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
     """
     Attempts to load model weights from a given path.
@@ -228,6 +242,9 @@ def approach2_test(boolean_func, func_name, num_samples=50):
             found_terms = set()
             for idx, sample in enumerate(samples):
                 explanation = explainer.explain(sample)
+                # Log explanation summary if debug is enabled.
+                if DEBUG_EXPLANATION:
+                    log_explanation_summary(explanation)
                 if 'coefficients' in explanation:
                     coefficients = explanation['coefficients']
                     significant_vars = tuple(sorted(
@@ -330,6 +347,8 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
                 for sample in all_inputs:
                     processed += 1
                     explanation = explainer.explain(np.array(sample))
+                    if DEBUG_EXPLANATION:
+                        log_explanation_summary(explanation)
                     if 'coefficients' in explanation:
                         coefficients = explanation['coefficients']
                         significant_vars = tuple(sorted(

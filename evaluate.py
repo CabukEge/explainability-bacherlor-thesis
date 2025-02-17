@@ -2,7 +2,13 @@ import torch
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from itertools import product
-from data import create_test_case_for_term  # Assumes this helper is defined in data.py
+
+# Define helper to create test case from a term.
+def create_test_case_for_term(term: tuple, n: int = 9) -> np.ndarray:
+    """Create a test case where specified variables are 1, others are 0"""
+    x = np.zeros(n)
+    x[list(term)] = 1
+    return x
 
 def verify_term(term: tuple, model, threshold: float = 0.5, log_pred: bool = False) -> bool:
     """
