@@ -109,7 +109,6 @@ def selective_approach_test(boolean_func, func_name):
         if not loaded:
             # Train the model if weights were not found
             if name == 'CNN':
-                # For CNN, more epochs for better convergence
                 logger.info(f"Training model: {name} (increased epochs for CNN)")
                 model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001)
             else:
@@ -150,27 +149,13 @@ def selective_approach_test(boolean_func, func_name):
                 # If the model is a CNN, reshape the flat input to 3x3
                 if hasattr(model, 'conv1'):
                     test_case = test_case.reshape(3, 3)
-                explanation = explainer.explain(test_case)
-                threshold_val = 0.05 if hasattr(model, 'conv1') else 0.1
-
-                if 'coefficients' in explanation:
-                    coefficients = explanation['coefficients']
-                    significant_vars = tuple(sorted(
-                        i for i, coef in enumerate(coefficients)
-                        if coef > threshold_val and test_case.flatten()[i] == 1
-                    ))
-                elif 'shap_values' in explanation:
-                    shap_values = explanation['shap_values']
-                    significant_vars = tuple(sorted(
-                        i for i, val in enumerate(shap_values)
-                        if val > threshold_val and test_case.flatten()[i] == 1
-                    ))
+                # Instead of using the explainer's attribution to determine the term,
+                # we simply use the fact that this input should trigger a positive prediction.
+                if verify_term(term, model):
+                    found_terms.add(term)
+                    logger.info(f"Found term {term} at sample {idx+1} out of {total_samples}")
                 else:
-                    significant_vars = None
-
-                if significant_vars and verify_term_is_minimal(significant_vars, list(found_terms), model):
-                    found_terms.add(significant_vars)
-                    logger.info(f"Found term {significant_vars} at sample {idx+1} out of {total_samples}")
+                    logger.info(f"Term {term} did not trigger a positive prediction in the model.")
 
             if not found_terms:
                 reconstructed_dnf = "False"

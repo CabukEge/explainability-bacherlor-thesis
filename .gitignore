@@ -20,6 +20,7 @@ wheels/
 .installed.cfg
 *.egg
 evaluate-unknown.py
+pt.txt
 
 # Results and data
 results/*
