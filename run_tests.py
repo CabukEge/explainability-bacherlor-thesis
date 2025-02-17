@@ -13,7 +13,7 @@ Approach 2 (Random Sampling):
   - Additionally, it aggregates summary statistics of the explanation values:
       • For inputs that trigger "true" (prediction ≥ 0.5): records the highest and lowest explanation value.
       • For inputs that trigger "false": records the highest explanation value.
-      • Then, it computes an adaptive threshold as (true_max_mean + false_max_mean)/2.
+      • Then, it computes an adaptive threshold as (true_max_mean + false_max_mean)/2 (if false_max_mean is available; otherwise 0.1).
       • This threshold is then used for extracting active features.
       
 Approach 3 (Exhaustive):
@@ -70,7 +70,7 @@ from explainers import (
 )
 from pprint import pformat  # For nicer printing at the end
 
-# DEBUG flag: set to True for additional debugging info.
+# DEBUG_EXPLANATION flag: set to True to print extra debug info (if desired)
 DEBUG_EXPLANATION = False
 
 ##############################
@@ -92,7 +92,8 @@ def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
 
 def get_prediction(model, sample):
     """Return the predicted probability (for class 1) of a given input sample.
-       Ensures sample is a numpy array."""
+       Ensures sample is a NumPy array.
+    """
     if isinstance(sample, tuple):
         sample = np.array(sample)
     from sklearn.tree import DecisionTreeClassifier
@@ -147,24 +148,37 @@ def aggregate_explanation_stats(model, samples, explainer):
     return stats
 
 ##############################
+# Training helper: uses different parameters for normal vs overtrained mode.
+##############################
+def train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained):
+    if overtrained:
+        # Use a higher epoch count for overtraining.
+        if hasattr(model, 'conv1'):  # Assume CNN
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001)
+        else:
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001)
+    else:
+        # Normal training schedule.
+        if hasattr(model, 'conv1'):  # CNN
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001)
+        else:
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
+
+##############################
 # Approach 1: Selective (Known DNF)
 ##############################
-def selective_approach_test(boolean_func, func_name):
+def selective_approach_test(boolean_func, func_name, overtrained):
     logger.info("=== Approach 1: Selective inputs based on known DNF ===")
     target_dnf = get_function_str(boolean_func)
     logger.info(f"Testing function: {func_name}")
     logger.info(f"Target DNF: {target_dnf}")
 
-    # Generate data
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
-
-    # Initialize models
     models = {
         'FCN': FCN(),
         'Decision Tree': train_tree(X_train, y_train),
         'CNN': CNN()
     }
-
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
     for name in ['FCN', 'CNN']:
@@ -172,12 +186,7 @@ def selective_approach_test(boolean_func, func_name):
         weight_path = os.path.join(weights_dir, f"{name}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
-            if name == 'CNN':
-                logger.info(f"Training model: {name} (increased epochs for CNN)")
-                model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001)
-            else:
-                logger.info(f"Training model: {name}")
-                model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
+            model, _ = train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained)
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
@@ -188,7 +197,6 @@ def selective_approach_test(boolean_func, func_name):
     results = {}
     explainer_metrics = {}
     agg_stats = {}
-    
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
         found_terms = set()
@@ -205,7 +213,6 @@ def selective_approach_test(boolean_func, func_name):
             dnf_terms = [f"({' ∧ '.join([f'x_{i+1}' for i in term])})" for term in found_terms]
             reconstructed_dnf = " ∨ ".join(sorted(dnf_terms))
         logger.info(f"Reconstructed DNF (from model {model_name}): {reconstructed_dnf}")
-        
         explainer_list = ['LIME', 'KernelSHAP']
         if hasattr(model, 'parameters'):
             explainer_list.append('IntegratedGradients')
@@ -220,7 +227,6 @@ def selective_approach_test(boolean_func, func_name):
                 explainer = IntegratedGradientsExplainer(model)
             elif explainer_name == 'TreeSHAP':
                 explainer = TreeSHAPExplainer(model)
-            # Aggregate explanation stats over the known samples.
             stats = aggregate_explanation_stats(model, samples, explainer)
             agg_stats.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
@@ -247,7 +253,7 @@ def selective_approach_test(boolean_func, func_name):
 ##############################
 # Approach 2: Random Sampling (50 samples)
 ##############################
-def approach2_test(boolean_func, func_name, num_samples=50):
+def approach2_test(boolean_func, func_name, num_samples, overtrained):
     logger.info(f"\n=== Approach 2: Reconstruction with {num_samples} random samples for {func_name} ===")
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
     models = {
@@ -263,10 +269,7 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
-            if name == 'CNN':
-                model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
-            else:
-                model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
+            model, _ = train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained)
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
@@ -287,11 +290,10 @@ def approach2_test(boolean_func, func_name, num_samples=50):
         samples = [np.array(random.choice(all_inputs)) for _ in range(num_samples)]
         for explainer_name, explainer in explainers.items():
             logger.info(f"\nUsing explainer: {explainer_name}")
-            # First, aggregate explanation stats over the random samples.
             stats = aggregate_explanation_stats(model, samples, explainer)
             expl_summary.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
-            # Compute adaptive threshold: if false_max_mean exists, threshold = (true_max_mean + false_max_mean)/2
+            # Compute adaptive threshold from aggregated stats.
             if stats['false_max_mean'] is not None:
                 adaptive_threshold = (stats['true_max_mean'] + stats['false_max_mean']) / 2
             else:
@@ -340,7 +342,7 @@ def approach2_test(boolean_func, func_name, num_samples=50):
 ##############################
 # Approach 3: Exhaustive (All 512 inputs)
 ##############################
-def approach3_test(boolean_func, func_name, timeout_sec=30):
+def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     logger.info(f"\n=== Approach 3: Full reconstruction over all inputs with timeout {timeout_sec}s for {func_name} ===")
     (X_train, y_train), (X_val, y_val), _ = generate_data(boolean_func)
     models = {
@@ -356,7 +358,7 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
-            model, _ = train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
+            model, _ = train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained)
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
@@ -387,7 +389,6 @@ def approach3_test(boolean_func, func_name, timeout_sec=30):
                 signal.alarm(timeout_sec)
                 for sample in all_inputs:
                     processed += 1
-                    # Ensure sample is a NumPy array
                     if isinstance(sample, tuple):
                         sample = np.array(sample)
                     explanation = explainer.explain(sample)
@@ -473,7 +474,11 @@ def main():
     parser.add_argument("--approach", type=str, default="all",
                         choices=["1", "2", "3", "all"],
                         help="Which approach to run: 1 (selective), 2 (50 random samples), 3 (all inputs), or all.")
+    parser.add_argument("--overtrained", action="store_true",
+                        help="If set, train models in an overtrained regime (more epochs) to achieve near-100% accuracy.")
     args = parser.parse_args()
+    
+    overtrained = args.overtrained
     functions = [
         (dnf_simple, "Simple_DNF"),
         (dnf_example, "Example_DNF"),
@@ -483,16 +488,16 @@ def main():
     all_explainer_metrics = {}
     if args.approach in ["1", "all"]:
         for func, name in functions:
-            res, metrics = selective_approach_test(func, name)
+            res, metrics = selective_approach_test(func, name, overtrained)
             all_results[f"{name}_selective"] = res
             all_explainer_metrics[f"{name}_selective"] = metrics
     if args.approach in ["2", "all"]:
         for func, name in functions:
-            res = approach2_test(func, name, num_samples=50)
+            res = approach2_test(func, name, num_samples=50, overtrained=overtrained)
             all_results[f"{name}_approach2"] = res
     if args.approach in ["3", "all"]:
         for func, name in functions:
-            res = approach3_test(func, name, timeout_sec=30)
+            res = approach3_test(func, name, timeout_sec=30, overtrained=overtrained)
             all_results[f"{name}_approach3"] = res
     logger.info("\nFinal aggregated results:")
     logger.info(pformat(all_results, indent=4))

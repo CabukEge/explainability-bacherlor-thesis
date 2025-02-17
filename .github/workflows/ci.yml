@@ -28,7 +28,7 @@ jobs:
         run: pytest
 
       - name: Run reconstruction tests (all approaches)
-        run: python run_tests.py --approach all
+        run: python run_tests.py --approach all --overtrained
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
