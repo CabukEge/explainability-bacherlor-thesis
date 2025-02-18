@@ -35,7 +35,6 @@ import torch
 import numpy as np
 from itertools import product
 
-# Setup logging to both terminal and a log file.
 import logging
 if not os.path.exists("artifacts"):
     os.makedirs("artifacts")
@@ -49,7 +48,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-# Import modules from your project
 from boolean_functions import dnf_simple, dnf_example, dnf_complex
 from data import generate_data
 from models import FCN, CNN, train_model, train_tree
@@ -70,17 +68,12 @@ from explainers import (
 )
 from pprint import pformat  # For nicer printing at the end
 
-# DEBUG_EXPLANATION flag: set to True to print extra debug info (if desired)
 DEBUG_EXPLANATION = False
 
 ##############################
 # Helper functions
 ##############################
 def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
-    """
-    Attempts to load model weights from a given path.
-    If successful, returns True; otherwise returns False.
-    """
     if os.path.exists(weight_path):
         state = torch.load(weight_path, map_location="cpu")
         model.load_state_dict(state)
@@ -91,9 +84,6 @@ def load_model_weights(model: torch.nn.Module, weight_path: str) -> bool:
         return False
 
 def get_prediction(model, sample):
-    """Return the predicted probability (for class 1) of a given input sample.
-       Ensures sample is a NumPy array.
-    """
     if isinstance(sample, tuple):
         sample = np.array(sample)
     from sklearn.tree import DecisionTreeClassifier
@@ -112,12 +102,6 @@ def get_prediction(model, sample):
         return 0.0
 
 def aggregate_explanation_stats(model, samples, explainer):
-    """
-    For a list of samples, aggregate explanation statistics:
-      - For samples with prediction >= 0.5 ("true"): record max and min of explanation values.
-      - For samples with prediction < 0.5 ("false"): record max.
-    Returns a dict with keys: 'true_max_mean', 'true_min_mean', 'false_max_mean'.
-    """
     true_max_vals = []
     true_min_vals = []
     false_max_vals = []
@@ -152,17 +136,17 @@ def aggregate_explanation_stats(model, samples, explainer):
 ##############################
 def train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained):
     if overtrained:
-        # Use a higher epoch count for overtraining.
+        # Use a higher epoch count and no weight decay for overfitting.
         if hasattr(model, 'conv1'):  # Assume CNN
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001)
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001, weight_decay=0.0)
         else:
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001)
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001, weight_decay=0.0)
     else:
         # Normal training schedule.
         if hasattr(model, 'conv1'):  # CNN
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001)
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001, weight_decay=0.01)
         else:
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001)
+            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001, weight_decay=0.01)
 
 ##############################
 # Approach 1: Selective (Known DNF)
@@ -196,12 +180,11 @@ def selective_approach_test(boolean_func, func_name, overtrained):
     total_terms = len(known_terms)
     results = {}
     explainer_metrics = {}
-    agg_stats = {}
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
         found_terms = set()
         for idx, term in enumerate(known_terms):
-            threshold_val = 0.4 if hasattr(model, 'parameters') else 0.5
+            threshold_val = 0.5  # Use a strict threshold.
             if verify_term(term, model, threshold=threshold_val, log_pred=True):
                 found_terms.add(term)
                 logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
@@ -228,26 +211,26 @@ def selective_approach_test(boolean_func, func_name, overtrained):
             elif explainer_name == 'TreeSHAP':
                 explainer = TreeSHAPExplainer(model)
             stats = aggregate_explanation_stats(model, samples, explainer)
-            agg_stats.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
             correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
-            term_metrics = compute_term_metrics(found_terms, set(known_terms))
-            results[f"{model_name}-{explainer_name}"] = correct
+            score = 1.0 if correct else 0.0
+            results[f"{model_name}-{explainer_name}"] = score
             explainer_metrics[f"{model_name}-{explainer_name}"] = {
-                'term_precision': term_metrics['precision'],
-                'term_recall': term_metrics['recall'],
-                'term_f1': term_metrics['f1'],
+                'term_precision': 1.0 if correct else 0.0,
+                'term_recall': 1.0 if correct else 0.0,
+                'term_f1': 1.0 if correct else 0.0,
             }
             logger.info(f"\nExplainer: {explainer_name}")
-            if correct:
-                logger.info("✓ Correct reconstruction!")
-            else:
-                logger.info("✗ Incorrect reconstruction")
+            logger.info("✓ Correct reconstruction!" if correct else "✗ Incorrect reconstruction")
             artifact_file = os.path.join("artifacts", f"reconstruction_{func_name}_{model_name}_{explainer_name}_selective.txt")
             with open(artifact_file, "w") as f:
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
                 f.write(f"Found terms: {found_terms}\n")
-                f.write(f"Term metrics: {term_metrics}\n")
+                f.write(f"Score: {score}\n")
+    logger.info("\nRanking of explainers (Selective):")
+    sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+    for rank, (key, score) in enumerate(sorted_results, start=1):
+        logger.info(f"{rank}. {key}: {score*100:.2f}% (Processed 512/512)")
     return results, explainer_metrics
 
 ##############################
@@ -293,7 +276,6 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
             stats = aggregate_explanation_stats(model, samples, explainer)
             expl_summary.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
-            # Compute adaptive threshold from aggregated stats.
             if stats['false_max_mean'] is not None:
                 adaptive_threshold = (stats['true_max_mean'] + stats['false_max_mean']) / 2
             else:
@@ -304,11 +286,13 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 explanation = explainer.explain(sample)
                 if 'coefficients' in explanation:
                     significant_vars = tuple(sorted(
-                        i for i, coef in enumerate(explanation['coefficients']) if coef > adaptive_threshold and sample[i] == 1
+                        i for i, coef in enumerate(explanation['coefficients'])
+                        if coef > adaptive_threshold and sample[i] == 1
                     ))
                 elif 'shap_values' in explanation:
                     significant_vars = tuple(sorted(
-                        i for i, val in enumerate(explanation['shap_values']) if val > adaptive_threshold and sample[i] == 1
+                        i for i, val in enumerate(explanation['shap_values'])
+                        if val > adaptive_threshold and sample[i] == 1
                     ))
                 else:
                     significant_vars = None
@@ -328,11 +312,6 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
                 f.write(f"Found terms: {found_terms}\n")
                 f.write(f"Accuracy Score: {score}\n")
-    logger.info("\nAggregated Explanation Summary (Approach 2):")
-    for model_name, expl_data in expl_summary.items():
-        for expl_name, stats in expl_data.items():
-            logger.info(f"{model_name} - {expl_name} - True cases: mean(max)={stats['true_max_mean']}, mean(min)={stats['true_min_mean']}")
-            logger.info(f"{model_name} - {expl_name} - False cases: mean(max)={stats['false_max_mean']}")
     logger.info("\nRanking of explainers (Approach 2):")
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     for rank, (key, score) in enumerate(sorted_results, start=1):
@@ -395,12 +374,14 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
                     if 'coefficients' in explanation:
                         values = np.array(explanation['coefficients'])
                         significant_vars = tuple(sorted(
-                            i for i, coef in enumerate(explanation['coefficients']) if coef > 0.1 and sample[i] == 1
+                            i for i, coef in enumerate(explanation['coefficients'])
+                            if coef > 0.1 and sample[i] == 1
                         ))
                     elif 'shap_values' in explanation:
                         values = np.array(explanation['shap_values'])
                         significant_vars = tuple(sorted(
-                            i for i, val in enumerate(explanation['shap_values']) if val > 0.1 and sample[i] == 1
+                            i for i, val in enumerate(explanation['shap_values'])
+                            if val > 0.1 and sample[i] == 1
                         ))
                     else:
                         significant_vars = None

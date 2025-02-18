@@ -30,41 +30,42 @@ class FCN(nn.Module):
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
-        # First convolution path - for local patterns
-        self.conv1 = nn.Conv2d(1, 4, kernel_size=2, stride=1, padding=0)
-        # Second convolution path - for global patterns
-        self.conv2 = nn.Conv2d(1, 4, kernel_size=3, stride=1, padding=0)
-        # Fully connected layers
-        self.fc1 = nn.Linear(8, 8)
-        self.fc2 = nn.Linear(8, 2)
-        # Batch normalization
-        self.bn1 = nn.BatchNorm2d(4)
-        self.bn2 = nn.BatchNorm2d(4)
-        # Dropout for regularization
-        self.dropout = nn.Dropout(0.1)
+        # Updated CNN for better overfitting on 3x3 grids:
+        # - Increase number of filters.
+        # - Remove dropout and batch normalization.
+        # - Use two convolutional paths to capture local and global patterns.
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=2, stride=1, padding=0)  # Output: (8, 2, 2)
+        self.conv2 = nn.Conv2d(1, 8, kernel_size=3, stride=1, padding=0)  # Output: (8, 1, 1)
+        # Fully connected layers: Concatenate the two paths.
+        self.fc1 = nn.Linear(8*2*2 + 8*1*1, 20)  # 32+8 = 40 input features
+        self.fc2 = nn.Linear(20, 2)
+        self._init_weights()
+
+    def _init_weights(self):
+        # Initialize weights using Xavier uniform and biases to zero.
+        for m in self.modules():
+            if isinstance(m, (nn.Conv2d, nn.Linear)):
+                nn.init.xavier_uniform_(m.weight)
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
 
     def forward(self, x):
         # Ensure x is shape [batch_size, 1, 3, 3]
-        path1 = self.conv1(x)
-        path1 = self.bn1(path1)
-        path1 = torch.relu(path1)
-        path1 = torch.max_pool2d(path1, kernel_size=path1.size()[2:])
-        path1 = path1.view(path1.size(0), -1)
-        path2 = self.conv2(x)
-        path2 = self.bn2(path2)
-        path2 = torch.relu(path2)
-        path2 = path2.view(path2.size(0), -1)
-        combined = torch.cat((path1, path2), dim=1)
-        combined = torch.relu(self.fc1(combined))
-        combined = self.dropout(combined)
-        out = self.fc2(combined)
+        x1 = torch.relu(self.conv1(x))  # shape: [batch, 8, 2, 2]
+        x1 = x1.view(x1.size(0), -1)
+        x2 = torch.relu(self.conv2(x))  # shape: [batch, 8, 1, 1]
+        x2 = x2.view(x2.size(0), -1)
+        x_combined = torch.cat([x1, x2], dim=1)
+        x_combined = torch.relu(self.fc1(x_combined))
+        out = self.fc2(x_combined)
         return out
 
 def train_model(model: nn.Module,
                 train_data: Tuple[torch.Tensor, torch.Tensor],
                 val_data: Tuple[torch.Tensor, torch.Tensor],
                 epochs: int = 1000,
-                lr: float = 0.001) -> Tuple[nn.Module, List[float]]:
+                lr: float = 0.001,
+                weight_decay: float = 0.01) -> Tuple[nn.Module, List[float]]:
     """
     Train the model and return both the model and list of validation accuracies.
     Trains up to 1000 epochs or stops early if nearly perfect accuracy is reached.
@@ -78,7 +79,7 @@ def train_model(model: nn.Module,
         X_train = X_train.view(-1, 1, 3, 3)
         X_val = X_val.view(-1, 1, 3, 3)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
     criterion = nn.CrossEntropyLoss(reduction='mean')
 
     best_model_state = None
