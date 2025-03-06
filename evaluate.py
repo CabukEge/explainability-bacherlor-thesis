@@ -91,11 +91,11 @@ def is_covered_by_terms(term: tuple, known_terms: list, model) -> bool:
                 return True
     return False
 
-def compute_term_metrics(reconstructed_terms: Set[Tuple], actual_terms: Set[Tuple]) -> Dict[str, float]:
+def compute_term_metrics(reconstructed_terms, actual_terms):
     """Compute precision, recall, and F1 score for term reconstruction."""
-    true_positives = len(reconstructed_terms.intersection(actual_terms))
-    false_positives = len(reconstructed_terms - actual_terms)
-    false_negatives = len(actual_terms - reconstructed_terms)
+    true_positives = len(set(reconstructed_terms).intersection(set(actual_terms)))
+    false_positives = len(set(reconstructed_terms) - set(actual_terms))
+    false_negatives = len(set(actual_terms) - set(reconstructed_terms))
     
     precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0
     recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0
@@ -301,6 +301,30 @@ def evaluate(boolean_func, func_name=""):
     
     return results, training_metrics, explainer_metrics
 
+def evaluate_functional_equivalence(reconstructed_dnf, original_function):
+    """
+    Evaluate functional equivalence by checking if reconstructed DNF produces
+    same outputs as original function for all possible inputs.
+    """
+    terms = parse_dnf_to_terms(reconstructed_dnf)
+    
+    def eval_dnf(x, terms):
+        for term in terms:
+            if all(x[i] == 1 for i in term):
+                return True
+        return False
+    
+    all_inputs = list(product([0, 1], repeat=9))
+    correct = 0
+    for x in all_inputs:
+        x_array = np.array(x)
+        pred = eval_dnf(x_array, terms)
+        actual = original_function(x_array)
+        if pred == (actual > 0.5):
+            correct += 1
+    
+    return correct / len(all_inputs)
+    
 def main():
     functions = [
         (dnf_simple, "Simple DNF"),
