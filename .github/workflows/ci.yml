@@ -29,7 +29,7 @@ jobs:
         run: pytest
 
       - name: Run reconstruction tests (all approaches)
-        run: python run_tests.py --approach all --overtrained
+        run: python run_tests.py --approach all
 
       - name: List generated artifacts
         run: find artifacts -type f | sort
