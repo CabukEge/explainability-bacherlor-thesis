@@ -160,7 +160,7 @@ def radar_chart(results, model_names, explainer_names, training_regimes):
         if 'approach3' in func_name:
             for model_explainer, result in func_results.items():
                 # Extract score from different possible result formats
-                if isinstance(result, tuple) and len(result) >= 1:
+                if isinstance(result, (tuple, list)) and len(result) >= 1:
                     score = result[0]
                 else:
                     score = result
