@@ -255,8 +255,12 @@ def evaluate(boolean_func, func_name=""):
     results = {}
     explainer_metrics = {}
     
-    for name, model in models.items():
+        for name, model in models.items():
         print(f"\nModel: {name}")
+        
+        # Determine training regime label based on final validation accuracy.
+        # (Here we assume a final validation accuracy of 1.0 indicates overfitting.)
+        regime_label = "(Overfitted)" if training_metrics[name]['final_val_accuracy'] == 1.0 else "(Normal)"
         
         # 1) Build the dictionary for this model
         explainers = {
@@ -264,7 +268,7 @@ def evaluate(boolean_func, func_name=""):
             'KernelSHAP': KernelSHAPExplainer(model)
         }
     
-        # 2) Only add IG if this model is a PyTorch model
+        # 2) Only add IntegratedGradients if this model is a PyTorch model
         if isinstance(model, torch.nn.Module):
             explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
     
@@ -289,8 +293,9 @@ def evaluate(boolean_func, func_name=""):
             term_metrics = compute_term_metrics(reconstructed_terms, known_dnf_terms)
             correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
     
-            results[f"{name}-{explainer_name}"] = correct
-            explainer_metrics[f"{name}-{explainer_name}"] = {
+            # Append the training regime label to the key
+            results[f"{name}-{explainer_name} {regime_label}"] = correct
+            explainer_metrics[f"{name}-{explainer_name} {regime_label}"] = {
                 'explanation_time': explanation_time,
                 'term_precision': term_metrics['precision'],
                 'term_recall': term_metrics['recall'],
