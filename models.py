@@ -60,71 +60,74 @@ class CNN(nn.Module):
         out = self.fc2(x_combined)
         return out
 
-def train_model(model: nn.Module,
-                train_data: Tuple[torch.Tensor, torch.Tensor],
-                val_data: Tuple[torch.Tensor, torch.Tensor],
-                epochs: int = 1000,
-                lr: float = 0.001,
-                weight_decay: float = 0.01) -> Tuple[nn.Module, List[float]]:
-    """
-    Train the model and return both the model and list of validation accuracies.
-    Trains up to 1000 epochs or stops early if nearly perfect accuracy is reached.
-    """
+def train_model(model, train_data, val_data, epochs=300, lr=0.001, weight_decay=0.01, return_history=False):
+    # Extract data
     X_train, y_train = train_data
     X_val, y_val = val_data
-    val_accuracies = []
-
-    # Adjust input shape for CNN.
-    if isinstance(model, CNN):
-        X_train = X_train.view(-1, 1, 3, 3)
-        X_val = X_val.view(-1, 1, 3, 3)
-
+    
+    # Use Adam optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-    criterion = nn.CrossEntropyLoss(reduction='mean')
-
-    best_model_state = None
-    best_acc = 0
+    
+    # Use cross-entropy loss
+    criterion = nn.CrossEntropyLoss()
+    
+    # Set up early stopping
+    best_val_acc = 0
     patience = 100
-    no_improve = 0
-
+    patience_counter = 0
+    
+    # Track training history
+    train_acc_history = []
+    val_acc_history = []
+    
     for epoch in range(epochs):
+        # Training phase
         model.train()
         optimizer.zero_grad()
-        outputs = model(X_train)
-        loss = criterion(outputs, y_train)
+        
+        if isinstance(model, CNN):
+            outputs = model(torch.FloatTensor(X_train).reshape(-1, 1, 3, 3))
+        else:
+            outputs = model(torch.FloatTensor(X_train))
+            
+        loss = criterion(outputs, y_train.long())
         loss.backward()
+        
+        # Clip gradients to prevent explosion
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        
         optimizer.step()
-
+        
+        # Calculate training accuracy
+        _, predicted = torch.max(outputs.data, 1)
+        train_accuracy = (predicted == y_train).sum().item() / y_train.size(0)
+        train_acc_history.append(train_accuracy)
+        
+        # Validation phase
         model.eval()
         with torch.no_grad():
-            val_outputs = model(X_val)
-            val_acc = (val_outputs.argmax(1) == y_val).float().mean().item()
-            val_accuracies.append(val_acc)
-
-        if val_acc > best_acc:
-            best_acc = val_acc
-            best_model_state = model.state_dict().copy()
-            no_improve = 0
+            if isinstance(model, CNN):
+                val_outputs = model(torch.FloatTensor(X_val).reshape(-1, 1, 3, 3))
+            else:
+                val_outputs = model(torch.FloatTensor(X_val))
+                
+            _, val_predicted = torch.max(val_outputs.data, 1)
+            val_accuracy = (val_predicted == y_val).sum().item() / y_val.size(0)
+            val_acc_history.append(val_accuracy)
+        
+        # Early stopping
+        if val_accuracy > best_val_acc:
+            best_val_acc = val_accuracy
+            patience_counter = 0
         else:
-            no_improve += 1
-
-        if epoch % 20 == 0:
-            print(f"Epoch {epoch}: Val Acc = {val_acc:.4f}")
-
-        # Stop early if nearly perfect accuracy is reached.
-        if best_acc >= 0.999:
-            print(f"Reached nearly perfect accuracy at epoch {epoch}")
-            break
-
-        if no_improve >= patience:
-            print(f"Early stopping at epoch {epoch}")
-            break
-
-    if best_model_state is not None:
-        model.load_state_dict(best_model_state)
-
-    return model, val_accuracies
+            patience_counter += 1
+            if patience_counter >= patience:
+                break
+    
+    if return_history:
+        return model, (train_acc_history, val_acc_history)
+    else:
+        return model, val_acc_history
 
 def train_tree(X_train: torch.Tensor, y_train: torch.Tensor) -> DecisionTreeClassifier:
     """

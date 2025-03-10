@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install numpy==1.23.5 matplotlib==3.7.1 seaborn==0.12.2 pandas==2.0.0
           pip install -e .
           pip install pytest
 
@@ -30,11 +31,25 @@ jobs:
       - name: Run reconstruction tests (all approaches)
         run: python run_tests.py --approach all --overtrained
 
+      - name: List generated artifacts
+        run: find artifacts -type f | sort
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: reconstruction-matrices
-          path: artifacts/
+          name: reconstruction-matrices-and-visualizations
+          path: |
+            artifacts/*.png
+            artifacts/*.txt
+            artifacts/run_tests.log
+      - name: Generate figures
+        run: python generate_figures.py
+
+      - name: Archive generated figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-figures
+          path: artifacts/*.png
 
   docker:
     runs-on: ubuntu-latest
@@ -66,4 +81,12 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run tests inside Docker
-        run: docker run --rm ghcr.io/${{ steps.repo_lower.outputs.repo }}/explainability:latest python run_tests.py --approach all
+        run: |
+          mkdir -p artifacts
+          docker run --rm -v $(pwd)/artifacts:/app/artifacts ghcr.io/${{ steps.repo_lower.outputs.repo }}/explainability:latest python run_tests.py --approach all
+      
+      - name: Archive Docker-generated artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-generated-artifacts
+          path: artifacts/
