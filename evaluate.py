@@ -255,54 +255,55 @@ def evaluate(boolean_func, func_name=""):
     results = {}
     explainer_metrics = {}
     
-        for name, model in models.items():
-        print(f"\nModel: {name}")
-        
-        # Determine training regime label based on final validation accuracy.
-        # (Here we assume a final validation accuracy of 1.0 indicates overfitting.)
-        regime_label = "(Overfitted)" if training_metrics[name]['final_val_accuracy'] == 1.0 else "(Normal)"
-        
-        # 1) Build the dictionary for this model
-        explainers = {
-            'LIME': LIMEExplainer(model),
-            'KernelSHAP': KernelSHAPExplainer(model)
+    for name, model in models.items():
+    print(f"\nModel: {name}")
+    
+    # Determine training regime label based on final validation accuracy.
+    # (Here we assume a final validation accuracy of 1.0 indicates overfitting.)
+    regime_label = "(Overfitted)" if training_metrics[name]['final_val_accuracy'] == 1.0 else "(Normal)"
+    
+    # 1) Build the dictionary for this model
+    explainers = {
+        'LIME': LIMEExplainer(model),
+        'KernelSHAP': KernelSHAPExplainer(model)
+    }
+
+    # 2) Only add IntegratedGradients if this model is a PyTorch model
+    if isinstance(model, torch.nn.Module):
+        explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
+
+    # 3) Only add TreeSHAP if this is a DecisionTreeClassifier
+    if isinstance(model, DecisionTreeClassifier):
+        explainers['TreeSHAP'] = TreeSHAPExplainer(model)
+
+    # 4) Now actually run the reconstruction for each explainer
+    for explainer_name, explainer in explainers.items():
+        print(f"\nExplainer: {explainer_name}")
+        start_time = time.time()
+
+        reconstructed_dnf = reconstruct_dnf_with_explainer(
+            model, explainer, list(known_dnf_terms), debug=DEBUG
+        )
+
+        explanation_time = time.time() - start_time
+        print(f"Reconstructed DNF: {reconstructed_dnf}")
+
+        # Evaluate the reconstruction
+        reconstructed_terms = set(parse_dnf_to_terms(reconstructed_dnf))
+        term_metrics = compute_term_metrics(reconstructed_terms, known_dnf_terms)
+        correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
+
+        # Append the training regime label to the key
+        results[f"{name}-{explainer_name} {regime_label}"] = correct
+        explainer_metrics[f"{name}-{explainer_name} {regime_label}"] = {
+            'explanation_time': explanation_time,
+            'term_precision': term_metrics['precision'],
+            'term_recall': term_metrics['recall'],
+            'term_f1': term_metrics['f1'],
         }
-    
-        # 2) Only add IntegratedGradients if this model is a PyTorch model
-        if isinstance(model, torch.nn.Module):
-            explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
-    
-        # 3) Only add TreeSHAP if this is a DecisionTreeClassifier
-        if isinstance(model, DecisionTreeClassifier):
-            explainers['TreeSHAP'] = TreeSHAPExplainer(model)
-    
-        # 4) Now actually run the reconstruction for each explainer
-        for explainer_name, explainer in explainers.items():
-            print(f"\nExplainer: {explainer_name}")
-            start_time = time.time()
-    
-            reconstructed_dnf = reconstruct_dnf_with_explainer(
-                model, explainer, list(known_dnf_terms), debug=DEBUG
-            )
-    
-            explanation_time = time.time() - start_time
-            print(f"Reconstructed DNF: {reconstructed_dnf}")
-    
-            # Evaluate the reconstruction
-            reconstructed_terms = set(parse_dnf_to_terms(reconstructed_dnf))
-            term_metrics = compute_term_metrics(reconstructed_terms, known_dnf_terms)
-            correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
-    
-            # Append the training regime label to the key
-            results[f"{name}-{explainer_name} {regime_label}"] = correct
-            explainer_metrics[f"{name}-{explainer_name} {regime_label}"] = {
-                'explanation_time': explanation_time,
-                'term_precision': term_metrics['precision'],
-                'term_recall': term_metrics['recall'],
-                'term_f1': term_metrics['f1'],
-            }
-    
-            print("✓ Correct reconstruction!" if correct else "✗ Incorrect reconstruction")
+
+        print("✓ Correct reconstruction!" if correct else "✗ Incorrect reconstruction")
+
     
     return results, training_metrics, explainer_metrics
 
