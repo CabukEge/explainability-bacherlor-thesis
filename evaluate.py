@@ -202,37 +202,31 @@ def reconstruct_dnf_with_explainer(model: Any, explainer: Any, known_dnf_terms: 
     dnf_terms = [f"({' ∧ '.join([f'x_{i+1}' for i in term])})" for term in terms]
     return " ∨ ".join(sorted(dnf_terms))
     
-def evaluate(boolean_func, func_name=""):
-    """
-    Train models and evaluate explanations.
-    """
+
+def evaluate(boolean_func, func_name="", overtrained=False):  # overtrained flag added
     print(f"\nTesting function: {func_name}")
     target_dnf = get_function_str(boolean_func)
     print(f"Target DNF: {target_dnf}")
 
     # Generate data
-    start_time = time.time()
     (X_train, y_train), (X_val, y_val), (X_test, y_test) = generate_data(boolean_func)
-    data_gen_time = time.time() - start_time
 
-    # Initialize models
+    # Initialize models (FCN, Decision Tree, CNN)
     models = {
         'FCN': FCN(),
         'Decision Tree': train_tree(X_train, y_train),
         'CNN': CNN()
     }
-
-    # Train or skip
     training_metrics = {}
     for name, model in models.items():
         if name != 'Decision Tree':
             start_time = time.time()
             model, val_accuracies = train_model(
-                models[name],
+                model,
                 (X_train, y_train),
                 (X_val, y_val),
                 epochs=1000,
-                lr=0.001  # smaller LR for CNN
+                lr=0.001
             )
             training_time = time.time() - start_time
             training_metrics[name] = {
@@ -250,62 +244,56 @@ def evaluate(boolean_func, func_name=""):
                 'convergence_epoch': 1
             }
 
+    # Get known terms from the target DNF
     known_dnf_terms = set(parse_dnf_to_terms(target_dnf))
-    
     results = {}
     explainer_metrics = {}
-    
+
     for name, model in models.items():
-    print(f"\nModel: {name}")
-    
-    # Determine training regime label based on final validation accuracy.
-    # (Here we assume a final validation accuracy of 1.0 indicates overfitting.)
-    regime_label = "(Overfitted)" if training_metrics[name]['final_val_accuracy'] == 1.0 else "(Normal)"
-    
-    # 1) Build the dictionary for this model
-    explainers = {
-        'LIME': LIMEExplainer(model),
-        'KernelSHAP': KernelSHAPExplainer(model)
-    }
+        print(f"\nModel: {name}")
 
-    # 2) Only add IntegratedGradients if this model is a PyTorch model
-    if isinstance(model, torch.nn.Module):
-        explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
-
-    # 3) Only add TreeSHAP if this is a DecisionTreeClassifier
-    if isinstance(model, DecisionTreeClassifier):
-        explainers['TreeSHAP'] = TreeSHAPExplainer(model)
-
-    # 4) Now actually run the reconstruction for each explainer
-    for explainer_name, explainer in explainers.items():
-        print(f"\nExplainer: {explainer_name}")
-        start_time = time.time()
-
-        reconstructed_dnf = reconstruct_dnf_with_explainer(
-            model, explainer, list(known_dnf_terms), debug=DEBUG
-        )
-
-        explanation_time = time.time() - start_time
-        print(f"Reconstructed DNF: {reconstructed_dnf}")
-
-        # Evaluate the reconstruction
-        reconstructed_terms = set(parse_dnf_to_terms(reconstructed_dnf))
-        term_metrics = compute_term_metrics(reconstructed_terms, known_dnf_terms)
-        correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
-
-        # Append the training regime label to the key
-        results[f"{name}-{explainer_name} {regime_label}"] = correct
-        explainer_metrics[f"{name}-{explainer_name} {regime_label}"] = {
-            'explanation_time': explanation_time,
-            'term_precision': term_metrics['precision'],
-            'term_recall': term_metrics['recall'],
-            'term_f1': term_metrics['f1'],
+        regime_label = "(Overfitted)" if overtrained else "(Normal)"
+        
+        # Build the dictionary of explainers for this model.
+        explainers = {
+            'LIME': LIMEExplainer(model),
+            'KernelSHAP': KernelSHAPExplainer(model)
         }
+        if isinstance(model, torch.nn.Module):
+            explainers['IntegratedGradients'] = IntegratedGradientsExplainer(model)
+        if isinstance(model, DecisionTreeClassifier):
+            explainers['TreeSHAP'] = TreeSHAPExplainer(model)
+        
+        # Run reconstruction for each explainer.
+        for explainer_name, explainer in explainers.items():
+            print(f"\nExplainer: {explainer_name}")
+            start_time = time.time()
 
-        print("✓ Correct reconstruction!" if correct else "✗ Incorrect reconstruction")
+            reconstructed_dnf = reconstruct_dnf_with_explainer(
+                model, explainer, list(known_dnf_terms), debug=DEBUG
+            )
+            explanation_time = time.time() - start_time
+            print(f"Reconstructed DNF: {reconstructed_dnf}")
 
-    
+            reconstructed_terms = set(parse_dnf_to_terms(reconstructed_dnf))
+            term_metrics = compute_term_metrics(reconstructed_terms, known_dnf_terms)
+            correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
+
+            # Append the regime label explicitly.
+            key = f"{name}-{explainer_name} {regime_label}"
+            results[key] = correct
+            explainer_metrics[key] = {
+                'explanation_time': explanation_time,
+                'term_precision': term_metrics['precision'],
+                'term_recall': term_metrics['recall'],
+                'term_f1': term_metrics['f1'],
+            }
+
+            print("✓ Correct reconstruction!" if correct else "✗ Incorrect reconstruction")
+
     return results, training_metrics, explainer_metrics
+
+
 
 def evaluate_functional_equivalence(reconstructed_dnf, original_function):
     """
