@@ -191,12 +191,13 @@ def train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained):
         else:
             return train_model(model, (X_train, y_train), (X_val, y_val), epochs=300, lr=0.001, weight_decay=0.01)
 
-##############################
+##################################################################
 # Approach 1: Selective (Known DNF)
-##############################
+##################################################################
 def selective_approach_test(boolean_func, func_name, overtrained):
     """
-    Enhanced selective approach with more detailed metrics
+    Enhanced selective approach with more detailed metrics.
+    Now explicitly appends "(Overfitted)" or "(Normal)" to keys.
     """
     logger.info("=== Approach 1: Selective inputs based on known DNF ===")
     target_dnf = get_function_str(boolean_func)
@@ -211,6 +212,8 @@ def selective_approach_test(boolean_func, func_name, overtrained):
     }
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
+    
+    # Load or train each model
     for name in ['FCN', 'CNN']:
         model = models[name]
         weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
@@ -221,7 +224,7 @@ def selective_approach_test(boolean_func, func_name, overtrained):
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
 
-    # Parse the known terms once
+    # Parse the known terms
     known_terms = parse_dnf_to_terms(target_dnf)
     samples = [create_test_case_for_term(term) for term in known_terms]
     total_terms = len(known_terms)
@@ -230,24 +233,26 @@ def selective_approach_test(boolean_func, func_name, overtrained):
     results = {}
     explainer_metrics = {}
     
-    model_performance = {}  # To track model accuracy on the terms
+    model_performance = {}  # Track model accuracy on the known terms
+    
+    # Overfitted or normal label:
+    regime_label = "(Overfitted)" if overtrained else "(Normal)"
     
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
         found_terms = set()
         
-        # Test prediction accuracy on all terms
+        # Test prediction accuracy on all known terms
         correct_predictions = 0
-        
         for idx, term in enumerate(known_terms):
-            threshold_val = 0.5  # Use a strict threshold
+            threshold_val = 0.5
             prediction = get_prediction(model, create_test_case_for_term(term))
             if prediction >= threshold_val:
                 found_terms.add(term)
                 correct_predictions += 1
-                logger.info(f"Found term {term} at sample {idx+1} out of {total_terms}")
+                logger.info(f"Found term {term} at sample {idx+1} / {total_terms}")
             else:
-                logger.info(f"Term {term} did not trigger a positive prediction (prediction={prediction:.4f}, threshold={threshold_val}).")
+                logger.info(f"Term {term} did NOT trigger positive prediction (pred={prediction:.4f}, thr={threshold_val}).")
         
         # Model accuracy on the known terms
         model_performance[model_name] = {
@@ -265,20 +270,18 @@ def selective_approach_test(boolean_func, func_name, overtrained):
         
         logger.info(f"Reconstructed DNF (from model {model_name}): {reconstructed_dnf}")
         
-        # Term-based metrics
+        # Evaluate reconstruction
         term_metrics = compute_term_metrics(found_terms, known_terms_set)
-        
-        # Functional equivalence
         functional_equiv = evaluate_functional_equivalence(reconstructed_dnf, boolean_func)
         
-        # Determine applicable explainers for this model
+        # Determine which explainers to test
         explainer_list = ['LIME', 'KernelSHAP']
         if hasattr(model, 'parameters'):
             explainer_list.append('IntegratedGradients')
         if model_name == 'Decision Tree':
             explainer_list.append('TreeSHAP')
         
-        # Test each explainer
+        # Evaluate each explainer
         for explainer_name in explainer_list:
             if explainer_name == 'LIME':
                 explainer = LIMEExplainer(model)
@@ -289,17 +292,19 @@ def selective_approach_test(boolean_func, func_name, overtrained):
             elif explainer_name == 'TreeSHAP':
                 explainer = TreeSHAPExplainer(model)
             
+            # Aggregate explanation stats
             stats, all_attribution_values = aggregate_explanation_stats(model, samples, explainer)
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
             
-            # Check for exact match with original DNF
+            # Check for exact match
             correct = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
             exact_match_score = 1.0 if correct else 0.0
             
-            results[f"{model_name}-{explainer_name}"] = exact_match_score
+            # **Add the regime label** so the chart sees "(Overfitted)" or "(Normal)"
+            key = f"{model_name}-{explainer_name} {regime_label}"
+            results[key] = exact_match_score
             
-            # Store all detailed metrics
-            explainer_metrics[f"{model_name}-{explainer_name}"] = {
+            explainer_metrics[key] = {
                 'term_precision': term_metrics['precision'],
                 'term_recall': term_metrics['recall'],
                 'term_f1': term_metrics['f1'],
@@ -317,8 +322,11 @@ def selective_approach_test(boolean_func, func_name, overtrained):
             logger.info(f"Term F1: {term_metrics['f1']:.4f}")
             logger.info(f"Functional Equivalence: {functional_equiv:.4f}")
             
-            # Save metrics to artifact file
-            artifact_file = os.path.join("artifacts", f"reconstruction_{func_name}_{model_name}_{explainer_name}_selective.txt")
+            # Save metrics
+            artifact_file = os.path.join(
+                "artifacts", 
+                f"reconstruction_{func_name}_{model_name}_{explainer_name}_selective.txt"
+            )
             with open(artifact_file, "w") as f:
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
                 f.write(f"Found terms: {found_terms}\n")
@@ -337,12 +345,14 @@ def selective_approach_test(boolean_func, func_name, overtrained):
     
     return results, explainer_metrics
 
-##############################
+
+##################################################################
 # Approach 2: Random Sampling (50 samples)
-##############################
+##################################################################
 def approach2_test(boolean_func, func_name, num_samples, overtrained):
     """
-    Enhanced random sampling approach with comprehensive metrics
+    Enhanced random sampling approach with comprehensive metrics.
+    Now explicitly appends "(Overfitted)" or "(Normal)" to keys.
     """
     logger.info(f"\n=== Approach 2: Reconstruction with {num_samples} random samples for {func_name} ===")
     
@@ -357,6 +367,8 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
     }
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
+    
+    # Load or train
     for name in ['FCN', 'CNN']:
         model = models[name]
         weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
@@ -375,10 +387,13 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
     all_inputs = list(product([0, 1], repeat=9))
     samples = [np.array(random.choice(all_inputs)) for _ in range(num_samples)]
     
+    # Overfitted or normal label:
+    regime_label = "(Overfitted)" if overtrained else "(Normal)"
+    
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
         
-        # Select explainers applicable for this model
+        # Select applicable explainers
         explainers = {
             'LIME': LIMEExplainer(model),
             'KernelSHAP': KernelSHAPExplainer(model)
@@ -396,8 +411,8 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
             expl_summary.setdefault(model_name, {})[explainer_name] = stats
             logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}: {stats}")
             
-            # Determine adaptive threshold for feature selection
-            if stats.get('false_max_mean') is not None:
+            # Determine an adaptive threshold
+            if stats.get('false_max_mean') is not None and stats['true_max_mean'] is not None:
                 adaptive_threshold = (stats['true_max_mean'] + stats['false_max_mean']) / 2
             else:
                 adaptive_threshold = 0.1
@@ -410,22 +425,26 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
             all_thresholds = []
             
             for idx, sample in enumerate(samples):
-                # Get explanation
+                # Explanation
                 explanation = explainer.explain(sample)
                 
-                # Extract significant variables based on explanation type
+                # Extract significant variables
                 if 'coefficients' in explanation:
                     significant_vars = tuple(sorted(
                         i for i, coef in enumerate(explanation['coefficients'])
                         if coef > adaptive_threshold and sample[i] == 1
                     ))
-                    all_thresholds.extend([coef for i, coef in enumerate(explanation['coefficients']) if sample[i] == 1])
+                    all_thresholds.extend(
+                        [coef for i, coef in enumerate(explanation['coefficients']) if sample[i] == 1]
+                    )
                 elif 'shap_values' in explanation:
                     significant_vars = tuple(sorted(
                         i for i, val in enumerate(explanation['shap_values'])
                         if val > adaptive_threshold and sample[i] == 1
                     ))
-                    all_thresholds.extend([val for i, val in enumerate(explanation['shap_values']) if sample[i] == 1])
+                    all_thresholds.extend(
+                        [val for i, val in enumerate(explanation['shap_values']) if sample[i] == 1]
+                    )
                 else:
                     significant_vars = None
                 
@@ -433,12 +452,12 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 prediction = get_prediction(model, sample)
                 all_predictions.append(prediction)
                 
-                # Only add terms that trigger a positive prediction and are minimal
+                # Add term if it triggers positive prediction and is minimal
                 if prediction >= 0.5 and significant_vars and verify_term_is_minimal(significant_vars, list(found_terms), model):
                     found_terms.add(significant_vars)
-                    logger.info(f"Found term {significant_vars} at sample {idx+1} out of {num_samples}")
+                    logger.info(f"Found term {significant_vars} at sample {idx+1} / {num_samples}")
             
-            # Construct the final DNF formula
+            # Construct final DNF
             if not found_terms:
                 reconstructed_dnf = "False"
             else:
@@ -447,13 +466,19 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 
             logger.info(f"Reconstructed DNF: {reconstructed_dnf}")
             
-            # Calculate evaluation metrics
+            # Evaluate
             term_metrics = compute_term_metrics(found_terms, known_terms_set)
             functional_equiv = evaluate_functional_equivalence(reconstructed_dnf, boolean_func)
             exact_match = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
             
-            # Store metrics
-            explainer_metrics[f"{model_name}-{explainer_name}"] = {
+            # Build the final key
+            key = f"{model_name}-{explainer_name} {regime_label}"
+            
+            # Use functional equivalence as the main "score"
+            results[key] = functional_equiv
+            
+            # Store detailed metrics
+            explainer_metrics[key] = {
                 'term_precision': term_metrics['precision'],
                 'term_recall': term_metrics['recall'],
                 'term_f1': term_metrics['f1'],
@@ -462,30 +487,26 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 'attribution_stats': stats,
                 'training_regime': 'overfitted' if overtrained else 'normal',
                 'threshold_stats': {
-                    'mean': np.mean(all_thresholds) if all_thresholds else None,
-                    'std': np.std(all_thresholds) if all_thresholds else None,
-                    'min': np.min(all_thresholds) if all_thresholds else None,
-                    'max': np.max(all_thresholds) if all_thresholds else None,
-                    'used_threshold': adaptive_threshold
+                    'mean': float(np.mean(all_thresholds)) if all_thresholds else None,
+                    'std': float(np.std(all_thresholds)) if all_thresholds else None,
+                    'min': float(np.min(all_thresholds)) if all_thresholds else None,
+                    'max': float(np.max(all_thresholds)) if all_thresholds else None,
+                    'used_threshold': float(adaptive_threshold)
                 },
                 'prediction_stats': {
-                    'mean': np.mean(all_predictions),
-                    'std': np.std(all_predictions),
-                    'positive_ratio': sum(1 for p in all_predictions if p >= 0.5) / len(all_predictions)
+                    'mean': float(np.mean(all_predictions)),
+                    'std': float(np.std(all_predictions)),
+                    'positive_ratio': float(sum(1 for p in all_predictions if p >= 0.5) / len(all_predictions))
                 }
             }
             
-            # Log metrics
             logger.info(f"Exact Match: {'✓' if exact_match else '✗'}")
             logger.info(f"Term Precision: {term_metrics['precision']:.4f}")
             logger.info(f"Term Recall: {term_metrics['recall']:.4f}")
             logger.info(f"Term F1: {term_metrics['f1']:.4f}")
             logger.info(f"Functional Equivalence: {functional_equiv:.4f}")
             
-            # Use functional equivalence as the main score for ranking
-            results[f"{model_name}-{explainer_name}"] = functional_equiv
-            
-            # Save to artifact file
+            # Save artifact
             artifact_file = os.path.join("artifacts", f"reconstruction_{func_name}_{model_name}_{explainer_name}_approach2.txt")
             with open(artifact_file, "w") as f:
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
@@ -496,10 +517,10 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
                 f.write(f"Term Recall: {term_metrics['recall']:.4f}\n")
                 f.write(f"Term F1: {term_metrics['f1']:.4f}\n")
                 f.write(f"Functional Equivalence: {functional_equiv:.4f}\n")
-                f.write(f"Sample Coverage: {num_samples}/512 ({num_samples/512*100:.1f}%)\n")
+                f.write(f"Sample Coverage: {num_samples}/512 ({(num_samples/512)*100:.1f}%)\n")
                 f.write(f"Attribution Statistics: {stats}\n")
-                f.write(f"Threshold Statistics: {explainer_metrics[f'{model_name}-{explainer_name}']['threshold_stats']}\n")
-                f.write(f"Prediction Statistics: {explainer_metrics[f'{model_name}-{explainer_name}']['prediction_stats']}\n")
+                f.write(f"Threshold Statistics: {explainer_metrics[key]['threshold_stats']}\n")
+                f.write(f"Prediction Statistics: {explainer_metrics[key]['prediction_stats']}\n")
     
     logger.info("\nRanking of explainers (Random Sampling):")
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
@@ -508,12 +529,14 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
     
     return results, explainer_metrics
 
-##############################
+
+##################################################################
 # Approach 3: Exhaustive (All 512 inputs)
-##############################
+##################################################################
 def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     """
-    Enhanced exhaustive approach with comprehensive metrics
+    Enhanced exhaustive approach with comprehensive metrics.
+    Now explicitly appends "(Overfitted)" or "(Normal)" to keys.
     """
     logger.info(f"\n=== Approach 3: Full reconstruction over all inputs with timeout {timeout_sec}s for {func_name} ===")
     
@@ -528,9 +551,11 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     }
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
+    
+    # Load or train
     for name in ['FCN', 'CNN']:
         model = models[name]
-        weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt") 
+        weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
@@ -552,6 +577,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     
     all_inputs = list(product([0, 1], repeat=9))
     total_inputs = len(all_inputs)
+    
+    # Overfitted or normal label:
+    regime_label = "(Overfitted)" if overtrained else "(Normal)"
     
     for model_name, model in models.items():
         logger.info(f"\nModel: {model_name}")
@@ -580,58 +608,56 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
                 signal.alarm(timeout_sec)
                 for sample in all_inputs:
                     processed += 1
-                    
                     if isinstance(sample, tuple):
                         sample = np.array(sample)
                     
-                    # Get explanation
                     explanation = explainer.explain(sample)
                     
-                    # Extract values based on explanation type
+                    # Extract values
                     if 'coefficients' in explanation:
                         values = np.array(explanation['coefficients'])
                         significant_vars = tuple(sorted(
-                            i for i, coef in enumerate(explanation['coefficients'])
+                            i for i, coef in enumerate(values)
                             if coef > 0.1 and sample[i] == 1
                         ))
                     elif 'shap_values' in explanation:
                         values = np.array(explanation['shap_values'])
                         significant_vars = tuple(sorted(
-                            i for i, val in enumerate(explanation['shap_values'])
+                            i for i, val in enumerate(values)
                             if val > 0.1 and sample[i] == 1
                         ))
                     else:
-                        significant_vars = None
                         values = None
+                        significant_vars = None
                     
-                    # Collect statistics
+                    # Collect stats
                     if values is not None:
                         all_attributions.extend(values)
                         p = get_prediction(model, sample)
                         agg_stats.append({
-                            'prediction': p, 
-                            'max': np.max(values), 
-                            'min': np.min(values),
-                            'sum': np.sum(values),
-                            'mean': np.mean(values),
-                            'std': np.std(values)
+                            'prediction': p,
+                            'max': float(np.max(values)),
+                            'min': float(np.min(values)),
+                            'sum': float(np.sum(values)),
+                            'mean': float(np.mean(values)),
+                            'std': float(np.std(values))
                         })
                     
-                    # Add significant terms that are minimal
+                    # If minimal
                     if significant_vars and verify_term_is_minimal(significant_vars, list(found_terms), model):
                         found_terms.add(significant_vars)
-                        logger.info(f"Found term {significant_vars} at processed count {processed} out of {total_inputs}")
+                        logger.info(f"Found term {significant_vars} at processed {processed}/{total_inputs}")
                 
                 signal.alarm(0)
                 completion_status = "Complete"
                 
             except TimeoutException:
-                logger.info(f"Timeout reached after processing {processed} out of {total_inputs} inputs.")
+                logger.info(f"Timeout reached after {processed}/{total_inputs} inputs.")
                 completion_status = f"Timeout after {timeout_sec}s"
             
             processing_time = time.time() - start_time
             
-            # Construct the DNF formula
+            # Construct the DNF
             if not found_terms:
                 reconstructed_dnf = "False"
             else:
@@ -640,19 +666,18 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
             
             logger.info(f"Reconstructed DNF: {reconstructed_dnf}")
             
-            # Calculate metrics
+            # Evaluate
             term_metrics = compute_term_metrics(found_terms, known_terms_set)
             functional_equiv = evaluate_functional_equivalence(reconstructed_dnf, boolean_func)
             exact_match = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
             
-            # Log aggregated explanation statistics
+            # Summarize explanation stats
             if agg_stats:
                 true_stats = [d for d in agg_stats if d['prediction'] >= 0.5]
                 false_stats = [d for d in agg_stats if d['prediction'] < 0.5]
-                
-                true_max_mean = np.mean([d['max'] for d in true_stats]) if true_stats else None
-                true_min_mean = np.mean([d['min'] for d in true_stats]) if true_stats else None
-                false_max_mean = np.mean([d['max'] for d in false_stats]) if false_stats else None
+                true_max_mean = float(np.mean([d['max'] for d in true_stats])) if true_stats else None
+                true_min_mean = float(np.mean([d['min'] for d in true_stats])) if true_stats else None
+                false_max_mean = float(np.mean([d['max'] for d in false_stats])) if false_stats else None
                 
                 logger.info(f"Aggregated explanation stats for {explainer_name} on {model_name}:")
                 logger.info(f"  True cases: count={len(true_stats)}, mean(max)={true_max_mean}, mean(min)={true_min_mean}")
@@ -662,14 +687,17 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
                     'true_max_mean': true_max_mean,
                     'true_min_mean': true_min_mean,
                     'false_max_mean': false_max_mean,
-                    'attribution_magnitude': np.mean([abs(v) for v in all_attributions]) if all_attributions else None,
-                    'attribution_stability': np.std([abs(v) for v in all_attributions]) if all_attributions else None
+                    'attribution_magnitude': float(np.mean(np.abs(all_attributions))) if all_attributions else None,
+                    'attribution_stability': float(np.std(np.abs(all_attributions))) if all_attributions else None
                 }
             else:
                 attribution_stats = {}
             
-            # Store detailed metrics
-            explainer_metrics[f"{model_name}-{explainer_name}"] = {
+            # Build final key
+            key = f"{model_name}-{explainer_name} {regime_label}"
+            
+            # Store
+            explainer_metrics[key] = {
                 'term_precision': term_metrics['precision'],
                 'term_recall': term_metrics['recall'],
                 'term_f1': term_metrics['f1'],
@@ -680,25 +708,27 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
                 'processing': {
                     'inputs_processed': processed,
                     'total_inputs': total_inputs,
-                    'completion_percentage': processed / total_inputs * 100,
+                    'completion_percentage': float(processed / total_inputs * 100),
                     'status': completion_status,
-                    'processing_time': processing_time
+                    'processing_time': float(processing_time)
                 }
             }
             
-            # Log metrics
+            # Use functional_equiv as main "score"
+            results[key] = (functional_equiv, processed, total_inputs)
+            
             logger.info(f"Exact Match: {'✓' if exact_match else '✗'}")
             logger.info(f"Term Precision: {term_metrics['precision']:.4f}")
             logger.info(f"Term Recall: {term_metrics['recall']:.4f}")
             logger.info(f"Term F1: {term_metrics['f1']:.4f}")
             logger.info(f"Functional Equivalence: {functional_equiv:.4f}")
-            logger.info(f"Processing Time: {processing_time:.2f}s for {processed}/{total_inputs} inputs ({processed/total_inputs*100:.1f}%)")
+            logger.info(f"Processing Time: {processing_time:.2f}s ({processed}/{total_inputs} inputs)")
             
-            # Store results for ranking
-            results[f"{model_name}-{explainer_name}"] = (functional_equiv, processed, total_inputs)
-            
-            # Save to artifact file
-            artifact_file = os.path.join("artifacts", f"reconstruction_{func_name}_{model_name}_{explainer_name}_approach3.txt")
+            # Save artifact
+            artifact_file = os.path.join(
+                "artifacts",
+                f"reconstruction_{func_name}_{model_name}_{explainer_name}_approach3.txt"
+            )
             with open(artifact_file, "w") as f:
                 f.write(f"Reconstructed DNF: {reconstructed_dnf}\n")
                 f.write(f"Found terms: {found_terms}\n")
@@ -719,7 +749,7 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
         logger.info(f"{rank}. {key}: {score*100:.2f}% (Processed {proc}/{total} inputs, {proc/total*100:.1f}%)")
     
     return results, explainer_metrics
-
+    
 ##############################
 # Helper to Evaluate Reconstructed DNF
 ##############################
