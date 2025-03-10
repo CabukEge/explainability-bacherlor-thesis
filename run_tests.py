@@ -749,7 +749,7 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
         logger.info(f"{rank}. {key}: {score*100:.2f}% (Processed {proc}/{total} inputs, {proc/total*100:.1f}%)")
     
     return results, explainer_metrics
-    
+
 ##############################
 # Helper to Evaluate Reconstructed DNF
 ##############################
@@ -809,46 +809,46 @@ def main():
     parser.add_argument("--approach", type=str, default="all",
                         choices=["1", "2", "3", "all"],
                         help="Which approach to run: 1 (selective), 2 (50 random samples), 3 (all inputs), or all.")
-    parser.add_argument("--overtrained", action="store_true",
-                        help="If set, train models in an overtrained regime (more epochs) to achieve near-100% accuracy.")
     args = parser.parse_args()
     
-    overtrained = args.overtrained
     functions = [
         (dnf_simple, "Simple_DNF"),
         (dnf_example, "Example_DNF"),
         (dnf_complex, "Complex_DNF")
     ]
     
-    # Store all results and metrics
     all_results = {}
     all_explainer_metrics = {}
     
-    # Run selected approaches
-    if args.approach in ["1", "all"]:
-        for func, name in functions:
-            res, metrics = selective_approach_test(func, name, overtrained)
-            all_results[f"{name}_selective"] = res
-            all_explainer_metrics[f"{name}_selective"] = metrics
+    for overtrained in [False, True]:
+        regime_suffix = "normal" if not overtrained else "overfitted"
+        if args.approach in ["1", "all"]:
+            for func, name in functions:
+                res, metrics = selective_approach_test(func, name, overtrained)
+                key = f"{name}_selective_{regime_suffix}"
+                all_results[key] = res
+                all_explainer_metrics[key] = metrics
+        
+        if args.approach in ["2", "all"]:
+            for func, name in functions:
+                res, metrics = approach2_test(func, name, num_samples=50, overtrained=overtrained)
+                key = f"{name}_approach2_{regime_suffix}"
+                all_results[key] = res
+                all_explainer_metrics[key] = metrics
+        
+        if args.approach in ["3", "all"]:
+            for func, name in functions:
+                res, metrics = approach3_test(func, name, timeout_sec=30, overtrained=overtrained)
+                key = f"{name}_approach3_{regime_suffix}"
+                all_results[key] = res
+                all_explainer_metrics[key] = metrics
     
-    if args.approach in ["2", "all"]:
-        for func, name in functions:
-            res, metrics = approach2_test(func, name, num_samples=50, overtrained=overtrained)
-            all_results[f"{name}_approach2"] = res
-            all_explainer_metrics[f"{name}_approach2"] = metrics
-    
-    if args.approach in ["3", "all"]:
-        for func, name in functions:
-            res, metrics = approach3_test(func, name, timeout_sec=30, overtrained=overtrained)
-            all_results[f"{name}_approach3"] = res
-            all_explainer_metrics[f"{name}_approach3"] = metrics
-    
-    # Save all metrics to a single comprehensive JSON file
+    # Save all metrics to a comprehensive JSON file
     with open("artifacts/comprehensive_metrics.json", "w") as f:
         json.dump({
             "results": all_results,
             "explainer_metrics": all_explainer_metrics,
-            "training_regime": "overfitted" if overtrained else "normal"
+            "training_regime": "mixed"  # now contains both normal and overfitted entries
         }, f, indent=2, default=str)
     
     # Generate a comprehensive summary report
