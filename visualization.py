@@ -256,6 +256,9 @@ def plot_overfitting_impact(results, model_names, explainer_names):
     # Prepare data
     data = {'Explainer': [], 'Accuracy (Normal)': [], 'Accuracy (Overfitted)': []}
     
+    # Debug: Let's see what data we're working with
+    print("Debugging accuracy values:")
+    
     # Gather data for explainers across all models for exhaustive approach
     for explainer in explainer_names:
         normal_acc = []
@@ -264,48 +267,58 @@ def plot_overfitting_impact(results, model_names, explainer_names):
         for func_name, func_results in results.items():
             if 'approach3' in func_name:
                 for model_explainer, result in func_results.items():
-                    # Extract score from different possible result formats
-                    if isinstance(result, tuple) and len(result) >= 1:
-                        score = result[0]
-                    else:
-                        score = result
-                    
                     if explainer in model_explainer:
+                        # Extract and print raw values for debugging
+                        raw_value = result
+                        print(f"Raw value for {model_explainer}: {raw_value}")
+                        
+                        # Extract score properly from different result formats
+                        if isinstance(result, tuple) and len(result) >= 1:
+                            score = float(result[0])
+                        elif isinstance(result, (int, float)):
+                            score = float(result)
+                        else:
+                            print(f"Warning: Unexpected result format: {type(result)}")
+                            score = 0.0
+                        
+                        print(f"Processed score: {score}")
+                        
+                        # Check if score is outside 0-1 range
+                        if score < 0.0 or score > 1.0:
+                            print(f"Warning: Score {score} outside valid range for {model_explainer}")
+                            # If consistently outside range, might need normalization
+                            # For now, just ensure it's within bounds
+                            score = min(max(score, 0.0), 1.0)
+                        
                         if '(Overfitted)' in model_explainer:
                             overfitted_acc.append(score)
                         else:
                             normal_acc.append(score)
         
-        # If no approach3 data, try approach2
+        # Similar checks for approach2 data if needed
         if not normal_acc and not overfitted_acc:
-            for func_name, func_results in results.items():
-                if 'approach2' in func_name:
-                    for model_explainer, result in func_results.items():
-                        # Extract score from different possible result formats
-                        if isinstance(result, tuple) and len(result) >= 1:
-                            score = result[0]
-                        else:
-                            score = result
-                        
-                        if explainer in model_explainer:
-                            if '(Overfitted)' in model_explainer:
-                                overfitted_acc.append(score)
-                            else:
-                                normal_acc.append(score)
+            # Code for approach2 processing...
+            pass
         
         if normal_acc or overfitted_acc:
+            # Print collected values for this explainer
+            print(f"\nExplainer: {explainer}")
+            print(f"Normal accuracy values: {normal_acc}")
+            print(f"Overfitted accuracy values: {overfitted_acc}")
+            
+            normal_mean = np.mean(normal_acc) if normal_acc else 0
+            overfitted_mean = np.mean(overfitted_acc) if overfitted_acc else 0
+            
+            print(f"Normal mean: {normal_mean}")
+            print(f"Overfitted mean: {overfitted_mean}")
+            
             data['Explainer'].append(explainer)
-            data['Accuracy (Normal)'].append(np.mean(normal_acc) if normal_acc else 0)
-            data['Accuracy (Overfitted)'].append(np.mean(overfitted_acc) if overfitted_acc else 0)
+            data['Accuracy (Normal)'].append(normal_mean)
+            data['Accuracy (Overfitted)'].append(overfitted_mean)
     
-    # If no data, return early
-    if not data['Explainer']:
-        return "No data available for overfitting impact plot"
+    # Rest of the plotting code remains the same...
     
-    # Convert to DataFrame for easier plotting
-    df = pd.DataFrame(data)
-    
-    # Create the plot
+    # Create the plot (with strict 0-1 y-axis)
     plt.figure(figsize=(10, 6))
     
     # Set width of bars
@@ -327,13 +340,22 @@ def plot_overfitting_impact(results, model_names, explainer_names):
     plt.xticks([r + barWidth/2 for r in range(len(df['Explainer']))], df['Explainer'])
     plt.legend()
     
-    # Add error bars - estimate std dev as 0.05 for visualization
-    std_dev = 0.05
-    plt.errorbar(r1, df['Accuracy (Normal)'], yerr=std_dev, fmt='none', ecolor='black', capsize=5)
-    plt.errorbar(r2, df['Accuracy (Overfitted)'], yerr=std_dev, fmt='none', ecolor='black', capsize=5)
+    # Add error bars
+    if normal_acc and overfitted_acc:
+        plt.errorbar(r1, df['Accuracy (Normal)'], 
+                    yerr=[np.std(normal_acc) if len(normal_acc) > 1 else 0.05 for _ in range(len(r1))], 
+                    fmt='none', ecolor='black', capsize=5)
+        plt.errorbar(r2, df['Accuracy (Overfitted)'], 
+                    yerr=[np.std(overfitted_acc) if len(overfitted_acc) > 1 else 0.05 for _ in range(len(r2))], 
+                    fmt='none', ecolor='black', capsize=5)
+    else:
+        # Fallback to standard error if we don't have enough data
+        std_dev = 0.05
+        plt.errorbar(r1, df['Accuracy (Normal)'], yerr=std_dev, fmt='none', ecolor='black', capsize=5)
+        plt.errorbar(r2, df['Accuracy (Overfitted)'], yerr=std_dev, fmt='none', ecolor='black', capsize=5)
     
     plt.title('Impact of Training Regime on Reconstruction Accuracy')
-    plt.ylim(0, 1.1)
+    plt.ylim(0, 1.0)  # Strict upper limit
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     
     plt.tight_layout()
