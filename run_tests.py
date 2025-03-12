@@ -548,8 +548,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     """
     Enhanced exhaustive approach with comprehensive metrics.
     Now explicitly appends "(Overfitted)" or "(Normal)" to keys.
+    This version processes all 512 inputs without any timeout.
     """
-    logger.info(f"\n=== Approach 3: Full reconstruction over all inputs with timeout {timeout_sec}s for {func_name} ===")
+    logger.info(f"\n=== Approach 3: Full reconstruction over all inputs for {func_name} ===")
     
     target_dnf = get_function_str(boolean_func)
     known_terms_set = set(parse_dnf_to_terms(target_dnf))
@@ -563,10 +564,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     weights_dir = "models_weights"
     os.makedirs(weights_dir, exist_ok=True)
     
-    # Load or train
+    # Load or train models for FCN and CNN
     for name in ['FCN', 'CNN']:
         model = models[name]
-        # FIX: Include training regime in weight file name
         regime_suffix = "overfitted" if overtrained else "normal"
         weight_path = os.path.join(weights_dir, f"{name}_{func_name}_{regime_suffix}.pt")
         loaded = load_model_weights(model, weight_path)
@@ -576,17 +576,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
             torch.save(model.state_dict(), weight_path)
             logger.info(f"Saved trained weights to {weight_path}")
         models[name] = model
-    
+
     results = {}
     explainer_metrics = {}
-    
-    class TimeoutException(Exception):
-        pass
-    
-    def timeout_handler(signum, frame):
-        raise TimeoutException()
-    
-    signal.signal(signal.SIGALRM, timeout_handler)
     
     all_inputs = list(product([0, 1], repeat=9))
     total_inputs = len(all_inputs)
@@ -610,67 +602,59 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
         for explainer_name, explainer in explainers.items():
             logger.info(f"\nUsing explainer: {explainer_name}")
             
-            # Process all inputs with timeout
+            # Process all inputs (no timeout)
             found_terms = set()
             processed = 0
             agg_stats = []
             all_attributions = []
             start_time = time.time()
             
-            try:
-                signal.alarm(timeout_sec)
-                for sample in all_inputs:
-                    processed += 1
-                    if isinstance(sample, tuple):
-                        sample = np.array(sample)
-                    
-                    explanation = explainer.explain(sample)
-                    
-                    # Extract values
-                    if 'coefficients' in explanation:
-                        values = np.array(explanation['coefficients'])
-                        significant_vars = tuple(sorted(
-                            i for i, coef in enumerate(values)
-                            if coef > 0.1 and sample[i] == 1
-                        ))
-                    elif 'shap_values' in explanation:
-                        values = np.array(explanation['shap_values'])
-                        significant_vars = tuple(sorted(
-                            i for i, val in enumerate(values)
-                            if val > 0.1 and sample[i] == 1
-                        ))
-                    else:
-                        values = None
-                        significant_vars = None
-                    
-                    # Collect stats
-                    if values is not None:
-                        all_attributions.extend(values)
-                        p = get_prediction(model, sample)
-                        agg_stats.append({
-                            'prediction': p,
-                            'max': float(np.max(values)),
-                            'min': float(np.min(values)),
-                            'sum': float(np.sum(values)),
-                            'mean': float(np.mean(values)),
-                            'std': float(np.std(values))
-                        })
-                    
-                    # If minimal
-                    if significant_vars and verify_term_is_minimal(significant_vars, list(found_terms), model):
-                        found_terms.add(significant_vars)
-                        logger.info(f"Found term {significant_vars} at processed {processed}/{total_inputs}")
+            for sample in all_inputs:
+                processed += 1
+                if isinstance(sample, tuple):
+                    sample = np.array(sample)
                 
-                signal.alarm(0)
-                completion_status = "Complete"
+                explanation = explainer.explain(sample)
                 
-            except TimeoutException:
-                logger.info(f"Timeout reached after {processed}/{total_inputs} inputs.")
-                completion_status = f"Timeout after {timeout_sec}s"
+                # Extract values from explanation
+                if 'coefficients' in explanation:
+                    values = np.array(explanation['coefficients'])
+                    significant_vars = tuple(sorted(
+                        i for i, coef in enumerate(values)
+                        if coef > 0.1 and sample[i] == 1
+                    ))
+                elif 'shap_values' in explanation:
+                    values = np.array(explanation['shap_values'])
+                    significant_vars = tuple(sorted(
+                        i for i, val in enumerate(values)
+                        if val > 0.1 and sample[i] == 1
+                    ))
+                else:
+                    values = None
+                    significant_vars = None
+                
+                # Collect stats if values exist
+                if values is not None:
+                    all_attributions.extend(values)
+                    p = get_prediction(model, sample)
+                    agg_stats.append({
+                        'prediction': p,
+                        'max': float(np.max(values)),
+                        'min': float(np.min(values)),
+                        'sum': float(np.sum(values)),
+                        'mean': float(np.mean(values)),
+                        'std': float(np.std(values))
+                    })
+                
+                # Add term if minimal
+                if significant_vars and verify_term_is_minimal(significant_vars, list(found_terms), model):
+                    found_terms.add(significant_vars)
+                    logger.info(f"Found term {significant_vars} at processed {processed}/{total_inputs}")
             
+            completion_status = "Complete"
             processing_time = time.time() - start_time
             
-            # Construct the DNF
+            # Construct the reconstructed DNF
             if not found_terms:
                 reconstructed_dnf = "False"
             else:
@@ -679,7 +663,7 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
             
             logger.info(f"Reconstructed DNF: {reconstructed_dnf}")
             
-            # Evaluate
+            # Evaluate the reconstruction
             term_metrics = compute_term_metrics(found_terms, known_terms_set)
             functional_equiv = evaluate_functional_equivalence(reconstructed_dnf, boolean_func)
             exact_match = are_dnfs_equivalent(reconstructed_dnf, target_dnf)
@@ -706,10 +690,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
             else:
                 attribution_stats = {}
             
-            # Build final key
+            # Build final key for metrics
             key = f"{model_name}-{explainer_name} {regime_label}"
             
-            # Store
             explainer_metrics[key] = {
                 'term_precision': term_metrics['precision'],
                 'term_recall': term_metrics['recall'],
@@ -727,7 +710,6 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
                 }
             }
             
-            # Use functional_equiv as main "score"
             results[key] = (functional_equiv, processed, total_inputs)
             
             logger.info(f"Exact Match: {'✓' if exact_match else '✗'}")
@@ -737,7 +719,7 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
             logger.info(f"Functional Equivalence: {functional_equiv:.4f}")
             logger.info(f"Processing Time: {processing_time:.2f}s ({processed}/{total_inputs} inputs)")
             
-            # Save artifact
+            # Save artifact to file
             artifact_file = os.path.join(
                 "artifacts",
                 f"reconstruction_{func_name}_{model_name}_{explainer_name}_approach3.txt"
@@ -762,6 +744,7 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
         logger.info(f"{rank}. {key}: {score*100:.2f}% (Processed {proc}/{total} inputs, {proc/total*100:.1f}%)")
     
     return results, explainer_metrics
+
 
 ##############################
 # Helper to Evaluate Reconstructed DNF
