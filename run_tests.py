@@ -216,7 +216,9 @@ def selective_approach_test(boolean_func, func_name, overtrained):
     # Load or train each model
     for name in ['FCN', 'CNN']:
         model = models[name]
-        weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
+        # FIX: Include training regime in weight file name
+        regime_suffix = "overfitted" if overtrained else "normal"
+        weight_path = os.path.join(weights_dir, f"{name}_{func_name}_{regime_suffix}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             model, _ = train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained)
@@ -371,7 +373,9 @@ def approach2_test(boolean_func, func_name, num_samples, overtrained):
     # Load or train
     for name in ['FCN', 'CNN']:
         model = models[name]
-        weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
+        # FIX: Include training regime in weight file name
+        regime_suffix = "overfitted" if overtrained else "normal"
+        weight_path = os.path.join(weights_dir, f"{name}_{func_name}_{regime_suffix}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
@@ -555,7 +559,9 @@ def approach3_test(boolean_func, func_name, timeout_sec, overtrained):
     # Load or train
     for name in ['FCN', 'CNN']:
         model = models[name]
-        weight_path = os.path.join(weights_dir, f"{name}_{func_name}.pt")
+        # FIX: Include training regime in weight file name
+        regime_suffix = "overfitted" if overtrained else "normal"
+        weight_path = os.path.join(weights_dir, f"{name}_{func_name}_{regime_suffix}.pt")
         loaded = load_model_weights(model, weight_path)
         if not loaded:
             logger.info(f"Training model: {name}")
