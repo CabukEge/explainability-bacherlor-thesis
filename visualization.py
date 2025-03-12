@@ -316,6 +316,7 @@ def plot_overfitting_impact(results, model_names, explainer_names):
     barWidth = 0.35
     
     # Set position of bars on X axis
+    df = pd.DataFrame(data)
     r1 = np.arange(len(df['Explainer']))
     r2 = [x + barWidth for x in r1]
     
