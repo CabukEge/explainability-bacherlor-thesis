@@ -256,8 +256,10 @@ def plot_overfitting_impact(results, model_names, explainer_names):
     # Prepare data
     data = {'Explainer': [], 'Accuracy (Normal)': [], 'Accuracy (Overfitted)': []}
     
-    # Debug: Let's see what data we're working with
-    print("Debugging accuracy values:")
+    # Debug information to help identify issues
+    print("Available keys in results dictionary:")
+    for key in results.keys():
+        print(f"  - {key}")
     
     # Gather data for explainers across all models for exhaustive approach
     for explainer in explainer_names:
@@ -265,58 +267,47 @@ def plot_overfitting_impact(results, model_names, explainer_names):
         overfitted_acc = []
         
         for func_name, func_results in results.items():
+            # Focus on approach3 as it should have the most comprehensive data
             if 'approach3' in func_name:
+                # Looking for overfitted data in the function name
+                is_overfitted_data = 'overfitted' in func_name.lower()
+                
+                print(f"\nAnalyzing {func_name} for {explainer} (is_overfitted_data={is_overfitted_data})")
+                
                 for model_explainer, result in func_results.items():
+                    # Only consider this explainer
                     if explainer in model_explainer:
-                        # Extract and print raw values for debugging
-                        raw_value = result
-                        print(f"Raw value for {model_explainer}: {raw_value}")
-                        
-                        # Extract score properly from different result formats
+                        # Extract score correctly
                         if isinstance(result, tuple) and len(result) >= 1:
-                            score = float(result[0])
-                        elif isinstance(result, (int, float)):
-                            score = float(result)
+                            score = result[0]
                         else:
-                            print(f"Warning: Unexpected result format: {type(result)}")
-                            score = 0.0
+                            score = result
                         
-                        print(f"Processed score: {score}")
+                        print(f"  Model-explainer: {model_explainer}, score: {score}")
                         
-                        # Check if score is outside 0-1 range
-                        if score < 0.0 or score > 1.0:
-                            print(f"Warning: Score {score} outside valid range for {model_explainer}")
-                            # If consistently outside range, might need normalization
-                            # For now, just ensure it's within bounds
-                            score = min(max(score, 0.0), 1.0)
+                        # The key issue: determine if this is an overfitted model result
+                        # Method 1: Check explicit marker in model name (original)
+                        has_overfitted_marker = '(Overfitted)' in model_explainer
                         
-                        if '(Overfitted)' in model_explainer:
+                        # Method 2: Use the function name marker (new)
+                        if is_overfitted_data:
                             overfitted_acc.append(score)
+                            print(f"    → Added to overfitted (from function name)")
                         else:
                             normal_acc.append(score)
-        
-        # Similar checks for approach2 data if needed
-        if not normal_acc and not overfitted_acc:
-            # Code for approach2 processing...
-            pass
+                            print(f"    → Added to normal (from function name)")
         
         if normal_acc or overfitted_acc:
-            # Print collected values for this explainer
-            print(f"\nExplainer: {explainer}")
-            print(f"Normal accuracy values: {normal_acc}")
-            print(f"Overfitted accuracy values: {overfitted_acc}")
-            
             normal_mean = np.mean(normal_acc) if normal_acc else 0
             overfitted_mean = np.mean(overfitted_acc) if overfitted_acc else 0
             
-            print(f"Normal mean: {normal_mean}")
-            print(f"Overfitted mean: {overfitted_mean}")
+            print(f"\nExplainer {explainer} final means:")
+            print(f"  Normal: {normal_mean:.4f} (from {len(normal_acc)} values)")
+            print(f"  Overfitted: {overfitted_mean:.4f} (from {len(overfitted_acc)} values)")
             
             data['Explainer'].append(explainer)
             data['Accuracy (Normal)'].append(normal_mean)
             data['Accuracy (Overfitted)'].append(overfitted_mean)
-    
-    # Rest of the plotting code remains the same...
     
     # Create the plot (with strict 0-1 y-axis)
     plt.figure(figsize=(10, 6))
