@@ -179,13 +179,20 @@ def evaluate_functional_equivalence(reconstructed_dnf, original_function):
 ##############################
 def train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained):
     if overtrained:
-        # Use a higher epoch count and no weight decay for overfitting.
-        if hasattr(model, 'conv1'):  # Assume CNN
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001, weight_decay=0.0)
-        else:
-            return train_model(model, (X_train, y_train), (X_val, y_val), epochs=1000, lr=0.001, weight_decay=0.0)
+        # For overfitting, combine training and validation data
+        # This lets the model see and memorize ALL available data
+        X_combined = np.concatenate([X_train, X_val], axis=0)
+        y_combined = np.concatenate([y_train, y_val], axis=0)
+        
+        # Use the combined data for both training and "validation" 
+        # (effectively disabling validation-based early stopping)
+        return train_model(model, (X_combined, y_combined), (X_combined, y_combined), 
+                          epochs=2000,  # Even more epochs
+                          lr=0.001, 
+                          weight_decay=0.0,
+                          early_stopping=False)  # Disable early stopping entirely
     else:
-        # Normal training schedule.
+        # Normal training remains unchanged
         if hasattr(model, 'conv1'):  # CNN
             return train_model(model, (X_train, y_train), (X_val, y_val), epochs=500, lr=0.001, weight_decay=0.01)
         else:
