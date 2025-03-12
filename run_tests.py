@@ -184,6 +184,7 @@ def train_model_with_mode(model, X_train, y_train, X_val, y_val, overtrained):
         X_combined = torch.cat([X_train, X_val], dim=0)
         y_combined = torch.cat([y_train, y_val], dim=0)
         
+        #
         # Use the combined data for both training and "validation"
         if hasattr(model, 'conv1'):  # Assume CNN
             return train_model(model, (X_combined, y_combined), (X_combined, y_combined), 
